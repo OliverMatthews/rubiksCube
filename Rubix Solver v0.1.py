@@ -563,20 +563,66 @@ def checkBlueSide(side):
 # Checks whether the top layer corners are in the correct positions. 
 # Takes 4 side matrices as input - these should be the matrices of the sides 
 # adjacent to the green side.
-def checkTopLayerCorners(side2, side3, side4, sidee):
+def checkTopLayerCorners(side2, side3, side4, side5):
     # Returns false if any of the top layer corners are out of position.
-    if a.side2[0][0] != "W" or a.side5[0][2] != "O":
+    if side2[0][0] != "W" or side5[0][2] != "O":
         return False
-    elif a.side3[0][0] != "R" or a.side2[0][2] != "W":
+    elif side3[0][0] != "R" or side2[0][2] != "W":
         return False
-    elif a.side4[0][0] != "Y" or a.side3[0][2] != "R":
+    elif side4[0][0] != "Y" or side3[0][2] != "R":
         return False
-    elif a.side5[0][0] != "O" or a.side4[0][2] != "Y":
+    elif side5[0][0] != "O" or side4[0][2] != "Y":
         return False
     
     # Returns true otherwise.
     else:
         return True
+    
+def checkCube(side1, side2, side3, side4, side5, side6):
+    # Cycles through every entry in side 1 and returns false if any are not
+    # green.
+    for i in range(len(side1)):
+        for j in range(len(side1)):
+            if side1[i][j] != "G":
+                return False
+            
+    # Cycles through every entry in side 2 and returns false if any are not
+    # white.
+    for i in range(len(side2)):
+        for j in range(len(side2)):
+            if side2[i][j] != "W":
+                return False
+            
+    # Cycles through every entry in side 3 and returns false if any are not
+    # red.
+    for i in range(len(side3)):
+        for j in range(len(side3)):
+            if side3[i][j] != "R":
+                return False
+    
+    # Cycles through every entry in side 4 and returns false if any are not
+    # yellow.
+    for i in range(len(side4)):
+        for j in range(len(side4)):
+            if side4[i][j] != "Y":
+                return False
+    
+    # Cycles through every entry in side 5 and returns false if any are not
+    # orange.
+    for i in range(len(side5)):
+        for j in range(len(side5)):
+            if side5[i][j] != "O":
+                return False
+    
+    # Cycles through every entry in side 6 and returns false if any are not
+    # blue.
+    for i in range(len(side6)):
+        for j in range(len(side6)):
+            if side6[i][j] != "B":
+                return False
+    
+    # Returns true otherwise.
+    return True
     
 def solveGreenCross():
     sequenceToFollow = ""
@@ -1225,15 +1271,22 @@ def solveBlueSide():
         counter += 1
         if counter > 10:
             break
-        
+
+# Function for solving the top layer corners of the cube. Should only be run
+# as part of the totalSolve() function, as it will not work unless all previous
+# solution steps have been completed.
 def solveTopLayerCorners():
+    # Sets up variables for function to operate correctly.
     counter = 0
     sequenceToFollow = ""
     
+    # Runs until the top layer corners are in the correct position.
     while checkTopLayerCorners(a.side2, a.side3, a.side4, a.side5) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
         
+        # Gets the number of correctly positioned corner pieces. Used to decide
+        # what state the cube is already in.
         numberOfCorrectCorners = 0
         if a.side2[0][0] == "W" and a.side5[0][2] == "O":
             numberOfCorrectCorners += 1
@@ -1243,16 +1296,101 @@ def solveTopLayerCorners():
             numberOfCorrectCorners += 1
         if a.side5[0][0] == "O" and a.side4[0][2] == "Y":
             numberOfCorrectCorners += 1
-        
+            
+        # Rotates the up face until two corners are in the correct position.
+        # If all previous steps completed correctly, there should always be
+        # two correct corner pieces to rotate into position.
         if numberOfCorrectCorners != 2:
             sequenceToFollow = "U1"
-            continue
         
+        # When the two correct pieces are in position, selects the correct
+        # algorithm to follow and runs it.
+        else:
+            # When the two correct pieces are diagonally opposite each other.
+            if (a.side2[0][0] == "W" and a.side5[0][2] == "O") and (a.side4[0][0] == "Y" and a.side3[0][2] == "R"):
+                sequenceToFollow = "R3F1R3B2R1F3R3B2R2U3"
+                continue
+            elif (a.side3[0][0] == "R" and a.side2[0][2] == "W") and (a.side5[0][0] == "O" and a.side4[0][2] == "Y"):
+                sequenceToFollow = "R3F1R3B2R1F3R3B2R2U3"
+                continue
+            
+            # When the two correct pieces include the same face of the cube.
+            elif (a.side4[0][0] == "Y" and a.side3[0][2] == "R") and (a.side5[0][0] == "O" and a.side4[0][2] == "Y"):
+                sequenceToFollow = "R3F1R3B2R1F3R3B2R2U3"
+                continue
+            elif (a.side2[0][0] == "W" and a.side5[0][2] == "O") and (a.side5[0][0] == "O" and a.side4[0][2] == "Y"):
+                sequenceToFollow = "B3R1B3L2B1R3B3L2B2U3"
+                continue
+            elif (a.side3[0][0] == "R" and a.side2[0][2] == "W") and (a.side2[0][0] == "W" and a.side5[0][2] == "O"):
+                sequenceToFollow = "L3B1L3F2L1B3L3F2L2U3"
+                continue
+            elif (a.side4[0][0] == "Y" and a.side3[0][2] == "R") and (a.side3[0][0] == "R" and a.side2[0][2] == "W"):
+                sequenceToFollow = "F3L1F3R2F1L3F3R2F2U3"
+                continue
+            
         # Standard failsafe, breaks out of function if it gets stuck in a loop
         counter += 1
         if counter > 10:
             break
+        
+# Function for solving the top layer edges of the cube. Should only be run as
+# part of the totalSolve() function, as it will not work unless all previous
+# solution steps have been completed.
+def solveTopLayerEdges():
+    # Sets up variables for function to operate correctly.
+    counter = 0
+    sequenceToFollow = ""
 
+    # Runs until the cube is solved.
+    while checkCube(a.side1, a.side2, a.side3, a.side4, a.side5, a.side6) != True:
+        a.followSequence(sequenceToFollow)
+        sequenceToFollow = ""
+    
+        # Gets the number of correctly positioned edge pieces. Used to decide
+        # what state the cube is already in.
+        numberOfCorrectEdges = 0
+        if a.side2[0][1] == "G":
+            numberOfCorrectEdges += 1
+        if a.side3[0][1] == "R":
+            numberOfCorrectEdges += 1
+        if a.side4[0][1] == "Y":
+            numberOfCorrectEdges += 1
+        if a.side5[0][1] == "O":
+            numberOfCorrectEdges += 1
+        
+        # If no edges are correctly positioned, run the sequence anyway and
+        # within 2 iterations of the loop one should be in the correct spot.
+        if numberOfCorrectEdges == 0:
+            sequenceToFollow = "F2U1L1R3F2L3R1U1F2"
+            continue
+        
+        # Otherwise find and run the correct algorithm.
+        elif numberOfCorrectEdges == 1:
+            # If the red top edge piece is correct.
+            if a.side3[0][1] == "R":
+                sequenceToFollow = "L2U1B1F3L2B3F1U1L2"
+                continue
+            
+            # If the yellow top edge piece is correct.
+            elif a.side4[0][1] == "Y":
+                sequenceToFollow = "F2U1L1R3F2L3R1U1F2"
+                continue
+            
+            # If the orange top edge piece is correct.
+            elif a.side5[0][1] == "O":
+                sequenceToFollow = "R2U1F1B3R2F3B1U1R2"
+                continue
+            
+            # If the white top edge piece is correct.
+            elif a.side6[0][1] == "W":
+                sequenceToFollow = "B2U1R1L3B2R3L1U1B2"
+                continue
+            
+        # Standard failsafe, breaks out of function if it gets stuck in a loop
+        counter += 1
+        if counter > 10:
+            break
+        
 # Calls each of the solving functions in order, completely solving the cube!
 def totalSolve():
     solveGreenCross()
@@ -1262,11 +1400,13 @@ def totalSolve():
     solveFirstTwoRows()
     solveBlueCross()
     solveBlueSide()
+    solveTopLayerCorners()
+    solveTopLayerEdges()
 
 # Developer function.
 # Useful for running many simulations of randomly shuffling the cube, then
 # solving it and testing to ensure that the cube is arranged correctly. Prints
-# statistics to the console after running all simulations to indicate success
+# information to the console after running all simulations indicating success
 # or failure statistics.
 def runSimulations(numberOfSimulations):
     # Used to count the total number of successes and failures.
@@ -1282,7 +1422,8 @@ def runSimulations(numberOfSimulations):
     blueCrossFailCounter = 0
     blueSideFailCounter = 0
     topLayerCornersFailCounter = 0
-    
+    cubeFailCounter = 0
+
     # Used for estimating the time remaining on the simulations.
     lastPercentageComplete = 0
     startTime = time.time()
@@ -1337,6 +1478,10 @@ def runSimulations(numberOfSimulations):
         elif checkTopLayerCorners(a.side2, a.side3, a.side4, a.side5) == False:
             failCounter += 1
             topLayerCornersFailCounter += 1
+            
+        elif checkCube(a.side1, a.side2, a.side3, a.side4, a.side5, a.side6) == False:
+            failCounter += 1
+            cubeFailCounter += 1
         
         # If the simulation passes all checks, adds 1 to the success counter.
         else:
@@ -1471,10 +1616,22 @@ def runSimulations(numberOfSimulations):
         else:
             print("All simulations PASSED the top layer corners check.")
             
+        # Prints failure statistics if any sim failed the overall cube 
+        # check, otherwise prints that all sims passed the overall cube
+        # check.
+        if cubeFailCounter > 0:
+            print(str(cubeFailCounter) + " simulations failed at the overall cube check.")
+            if int((cubeFailCounter / numberOfSimulations)*100) > 1:
+                print("This represents approximately " + str(int((cubeFailCounter / numberOfSimulations)*100)) + "% of the simulations run.")
+            else:
+                print("This represents less than 1% of the simulations run.")
+        else:
+            print("All simulations PASSED the overall cube check.")
+        
     # If all sims passed all checks, does not print any of the failure info
     # to the console - just prints that all sims were successful.
     else:
-        print("ALL " + str(numberOfSimulations) + " simulations were successful.")
+        print("All " + str(numberOfSimulations) + " simulations were successful.")
     
     # Blank line to separate statistics categories.
     print("")
@@ -1490,4 +1647,4 @@ def runSimulations(numberOfSimulations):
     print("An average of around " + str(int(simsPerSecond)) + " simulations were run per second.")
     print("Average time to complete one simulation was " + str(avgTimePerSim) + " seconds.")
     
-runSimulations(10000)
+runSimulations(2000)
