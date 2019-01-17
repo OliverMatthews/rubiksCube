@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Face Rotation Algorithms
 
-v0.5 (alpha)
+v0.6 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
