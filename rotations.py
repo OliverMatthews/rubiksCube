@@ -1,7 +1,8 @@
 """
-Rubix Cube Solver - Main Script
+Rubix Cube Solver - Face Rotation Algorithms
 
-v0.3 alpha
+v0.5 (alpha)
+History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
 """
