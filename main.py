@@ -1,7 +1,8 @@
 """
 Rubix Cube Solver - Main Script
 
-v0.3 alpha
+v0.4 (alpha)
+History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
 """
@@ -10,6 +11,7 @@ from random import randint
 import time
 import datetime
 import rotations as rt
+import checks as chk
 
 # Contains functions for the Rubik's cube object.
 class rubikCube:
@@ -156,209 +158,10 @@ class rubikCube:
 # Initialises the game cube from the rubikCube class with a cube size of 3.
 a = rubikCube(3) 
 
-# Checks whether the 'green cross' step has been completed correctly. Takes one
-# side matrix as input.
-def checkGreenCross(side):
-    # Returns false if any of the green cross pieces are out of position.
-    if side[0][1] != "G":
-        return False
-    elif side[1][0] != "G":
-        return False
-    elif side[1][2] != "G":
-        return False
-    elif side[2][1] != "G":
-        return False
-    elif side[1][1] != "G":
-        return False
-    
-    # Returns true otherwise.
-    else:
-        return True
-    
-# Checks whether the 'green side' step has been completed correctly. Takes one
-# side matrix as input.
-def checkGreenSide(side):
-    
-    # Cycles through every entry in the matrix and returns false if any are not
-    # green.
-    for i in range(len(side)):
-        for j in range(len(side)):
-            if side[i][j] != "G":
-                return False
-            
-    # Returns true otherwise.
-    return True
-
-# Checks whether the edge pieces adjacent the green side match the centre 
-# colour for their side. Takes 4 side matrices as inputs - these should be the
-# matrices of the sides adjacent to the green side.
-def checkAlignedCenters(side2, side3, side4, side5):
-    
-    # Returns false if the adjacent white edge is not in the correct position.
-    if side2[2][1] != "W":
-        return False
-    # Returns false if the adjacent red edge is not in the correct position.
-    elif side3[2][1] != "R":
-        return False
-    # Returns false if the adjacent yellow edge is not in the correct position.
-    elif side4[2][1] != "Y":
-        return False
-    # Returns false if the adjacent orange edge is not in the correct position.
-    elif side5[2][1] != "O":
-        return False
-    
-    # Returns true otherwise.
-    else:
-        return True
-
-# Checks whether the corner pieces adjacent the green side match the centre
-# colour for their side. Takes 4 side matrices as inputs - these should be
-# the matrices of the sides adjacent to the green side.
-def checkAlignedCorners(side2, side3, side4, side5):
-    
-    # Returns false if the green/white/orange corner is incorrectly placed.
-    if side2[2][0] != "W" or side5[2][2] != "O":
-        return False
-    # Returns false if the green/red/white corner is incorrectly placed.
-    elif side3[2][0] != "R" or side2[2][2] != "W":
-        return False
-    # Returns false if the green/yellow/red corner is incorrectly placed.
-    elif side4[2][0] != "Y" or side3[2][2] != "R":
-        return False
-    # Returns false if the green/orange/yellow corner is incorrectly placed.
-    elif side5[2][0] != "O" or side4[2][2] != "Y":
-        return False
-    
-    # Returns true otherwise.
-    else:
-        return True
-
-# Checks whether the two rows closest the green side on the white, red, yellow
-# and orange sides are solved correctly. Takes 4 side matrices as input - these
-# should be the matrices of the sides adjacent to the green side.
-def checkFirstTwoRows(side2, side3, side4, side5):
-    
-    for i in range(len(side2)-1):
-        for j in range(len(side2)):
-            if side2[i+1][j] != "W":
-                return False
-    
-    for i in range(len(side3)-1):
-        for j in range(len(side3)):
-            if side3[i+1][j] != "R":
-                return False
-    
-    for i in range(len(side4)-1):
-        for j in range(len(side4)):
-            if side4[i+1][j] != "Y":
-                return False
-    
-    for i in range(len(side5)-1):
-        for j in range(len(side5)):
-            if side5[i+1][j] != "O":
-                return False
-
-# Checks whether the 'blue cross' step has been completed correctly. Takes one
-# side matrix as input.
-def checkBlueCross(side):
-    # Returns false if any of the blue cross pieces are out of position.
-    if side[0][1] != "B":
-        return False
-    elif side[1][0] != "B":
-        return False
-    elif side[1][2] != "B":
-        return False
-    elif side[2][1] != "B":
-        return False
-    elif side[1][1] != "B":
-        return False
-    
-    # Returns true otherwise.
-    else:
-        return True
-    
-# Checks whether the 'blue side' step has been completed correctly. Takes one
-# side matrix as input.
-def checkBlueSide(side):
-    
-    # Cycles through every entry in the matrix and returns false if any are not
-    # blue.
-    for i in range(len(side)):
-        for j in range(len(side)):
-            if side[i][j] != "B":
-                return False
-            
-    # Returns true otherwise.
-    return True
-
-# Checks whether the top layer corners are in the correct positions. 
-# Takes 4 side matrices as input - these should be the matrices of the sides 
-# adjacent to the green side.
-def checkTopLayerCorners(side2, side3, side4, side5):
-    # Returns false if any of the top layer corners are out of position.
-    if side2[0][0] != "W" or side5[0][2] != "O":
-        return False
-    elif side3[0][0] != "R" or side2[0][2] != "W":
-        return False
-    elif side4[0][0] != "Y" or side3[0][2] != "R":
-        return False
-    elif side5[0][0] != "O" or side4[0][2] != "Y":
-        return False
-    
-    # Returns true otherwise.
-    else:
-        return True
-    
-def checkCube(side1, side2, side3, side4, side5, side6):
-    # Cycles through every entry in side 1 and returns false if any are not
-    # green.
-    for i in range(len(side1)):
-        for j in range(len(side1)):
-            if side1[i][j] != "G":
-                return False
-            
-    # Cycles through every entry in side 2 and returns false if any are not
-    # white.
-    for i in range(len(side2)):
-        for j in range(len(side2)):
-            if side2[i][j] != "W":
-                return False
-            
-    # Cycles through every entry in side 3 and returns false if any are not
-    # red.
-    for i in range(len(side3)):
-        for j in range(len(side3)):
-            if side3[i][j] != "R":
-                return False
-    
-    # Cycles through every entry in side 4 and returns false if any are not
-    # yellow.
-    for i in range(len(side4)):
-        for j in range(len(side4)):
-            if side4[i][j] != "Y":
-                return False
-    
-    # Cycles through every entry in side 5 and returns false if any are not
-    # orange.
-    for i in range(len(side5)):
-        for j in range(len(side5)):
-            if side5[i][j] != "O":
-                return False
-    
-    # Cycles through every entry in side 6 and returns false if any are not
-    # blue.
-    for i in range(len(side6)):
-        for j in range(len(side6)):
-            if side6[i][j] != "B":
-                return False
-    
-    # Returns true otherwise.
-    return True
-    
 def solveGreenCross():
     sequenceToFollow = ""
     counter = 0
-    while checkGreenCross(a.side1) != True:
+    while chk.greenCross(a.side1) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""    
         if a.side1[1][0] != "G":
@@ -462,7 +265,7 @@ def solveGreenCorners():
     counter = 0
     errorCounter = 0
     
-    while checkGreenSide(a.side1) != True:
+    while chk.greenSide(a.side1) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
         
@@ -528,7 +331,7 @@ def fixAlignedCenters():
     sequenceToFollow = ""
     counter = 0
     
-    while checkAlignedCenters(a.side2, a.side3, a.side4, a.side5) != True:
+    while chk.alignedCenters(a.side2, a.side3, a.side4, a.side5) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
         
@@ -620,7 +423,7 @@ def fixAlignedCorners():
     sequenceToFollow = ""
     counter = 0
     
-    while checkAlignedCorners(a.side2, a.side3, a.side4, a.side5) != True:
+    while chk.alignedCorners(a.side2, a.side3, a.side4, a.side5) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
         
@@ -658,7 +461,7 @@ def solveFirstTwoRows():
     sequenceToFollow = ""
     counter = 0
     
-    while checkFirstTwoRows(a.side2, a.side3, a.side4, a.side5) != True:
+    while chk.firstTwoRows(a.side2, a.side3, a.side4, a.side5) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
         
@@ -904,7 +707,7 @@ def solveBlueCross():
     sequenceToFollow = ""
     
     # Runs until the blue cross is formed.
-    while checkBlueCross != True:
+    while chk.blueCross != True:
         # Follows the sequence from the last run of the loop, then clears the
         # sequence string ready for the next instruction.
         a.followSequence(sequenceToFollow)
@@ -960,7 +763,7 @@ def solveBlueSide():
     counter = 0
     sequenceToFollow = ""
     
-    while checkBlueSide(a.side6) != True:
+    while chk.blueSide(a.side6) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
         
@@ -1012,7 +815,7 @@ def solveTopLayerCorners():
     sequenceToFollow = ""
     
     # Runs until the top layer corners are in the correct position.
-    while checkTopLayerCorners(a.side2, a.side3, a.side4, a.side5) != True:
+    while chk.topLayerCorners(a.side2, a.side3, a.side4, a.side5) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
         
@@ -1073,7 +876,7 @@ def solveTopLayerEdges():
     sequenceToFollow = ""
 
     # Runs until the cube is solved.
-    while checkCube(a.side1, a.side2, a.side3, a.side4, a.side5, a.side6) != True:
+    while chk.wholeCube(a.side1, a.side2, a.side3, a.side4, a.side5, a.side6) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
     
@@ -1171,46 +974,46 @@ def runSimulations(numberOfSimulations):
         totalSolve()
         
         # Checks if the green cross was completed correctly.
-        if checkGreenCross(a.side1) == False:
+        if chk.greenCross(a.side1) == False:
             failCounter += 1
             greenCrossFailCounter += 1
             
         # Checks if the green side was completed correctly.
-        elif checkGreenSide(a.side1) == False:
+        elif chk.greenSide(a.side1) == False:
             failCounter += 1
             greenSideFailCounter += 1
             
         # Checks if the centre edges adjacent the green side are aligned
         # correctly.
-        elif checkAlignedCenters(a.side2, a.side3, a.side4, a.side5) == False:
+        elif chk.alignedCenters(a.side2, a.side3, a.side4, a.side5) == False:
             failCounter += 1
             alignedCentersFailCounter += 1
         
         # Checks if the corner pieces adjacent the green side are aligned
         # correctly.
-        elif checkAlignedCorners(a.side2, a.side3, a.side4, a.side5) == False:
+        elif chk.alignedCorners(a.side2, a.side3, a.side4, a.side5) == False:
             failCounter += 1
             alignedCornersFailCounter += 1
         
         # Checks if the first two rows closest the green side on the white,
         # red, yellow and orange sides have been completed correctly.
-        elif checkFirstTwoRows(a.side2, a.side3, a.side4, a.side5) == False:
+        elif chk.firstTwoRows(a.side2, a.side3, a.side4, a.side5) == False:
             failCounter += 1
             firstTwoRowsFailCounter += 1
         
-        elif checkBlueCross(a.side6) == False:
+        elif chk.blueCross(a.side6) == False:
             failCounter += 1
             blueCrossFailCounter += 1
             
-        elif checkBlueSide(a.side6) == False:
+        elif chk.blueSide(a.side6) == False:
             failCounter += 1
             blueSideFailCounter += 1
             
-        elif checkTopLayerCorners(a.side2, a.side3, a.side4, a.side5) == False:
+        elif chk.topLayerCorners(a.side2, a.side3, a.side4, a.side5) == False:
             failCounter += 1
             topLayerCornersFailCounter += 1
             
-        elif checkCube(a.side1, a.side2, a.side3, a.side4, a.side5, a.side6) == False:
+        elif chk.wholeCube(a.side1, a.side2, a.side3, a.side4, a.side5, a.side6) == False:
             failCounter += 1
             cubeFailCounter += 1
         
