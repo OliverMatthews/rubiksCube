@@ -1,12 +1,11 @@
 """
 Rubix Cube Solver - Cube State Checking Algorithms
 
-v0.4 (alpha)
+v0.5 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
 """
-
 # Checks whether the 'green cross' step has been completed correctly. Takes one
 # side matrix as input.
 def greenCross(side):
