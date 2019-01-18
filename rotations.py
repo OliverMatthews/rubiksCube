@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Face Rotation Algorithms
 
-v0.6 (alpha)
+v0.8 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -20,13 +20,12 @@ def shiftColourSequence(cubeSize, colourSequence, inverse):
     # For an anticlockwise rotation, takes the last side of colours and moves
     # them to the start of the sequence, then returns the altered sequence.
     elif inverse == True:
-        colourSequence = colourSequence[-cubeSize:] + colourSequence[:cubeSize]
+        colourSequence = colourSequence[-cubeSize:] + colourSequence[:-cubeSize]
         return colourSequence
     
 # Uses matrix manipulation to rotate a side without changing the order of the
 # colours in any way.
 def rotateStillFace(side):
-    
     # Code needs optimising - currently this calculates an anticlockwise
     # rotation of the face and just repeats it three times instead of rotating
     # clockwise. Logged on github as issue #5.
@@ -102,9 +101,9 @@ def rotateRight(side1, side2, side6, side4, side3):
     
     for i in range(len(side4)-1, -1, -1):
         colourSequence = colourSequence + side4[i][0]
-    
+
     colourSequence = shiftColourSequence(len(side1), colourSequence, False)
-    
+
     for i in range(len(side6)):
         side6[i][2] = colourSequence[0]
         colourSequence = colourSequence[1:]
