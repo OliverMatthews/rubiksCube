@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Developer Functions
 
-v0.7 (alpha)
+v0.8 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -79,7 +79,7 @@ def runSimulations(numberOfSimulations):
         
         # Randomly shuffles the cube 100 times - enough to guarantee a random
         # shuffle.
-        solve.a.randomShuffle(100)
+        solve.a.randomShuffle(30)
         
         # Runs the solving functions to complete the cube.
         solve.totalSolve()

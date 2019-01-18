@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Cube Object(s)
 
-v0.7 (alpha)
+v0.8 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -16,23 +16,30 @@ class rubikCube:
     
     # Initialises the sides of the cube
     def __init__(self, cubeSize):
-        self.side1 = [["","",""],["","",""],["","",""]] # Green
-        self.side2 = [["","",""],["","",""],["","",""]] # White
-        self.side3 = [["","",""],["","",""],["","",""]] # Red
-        self.side4 = [["","",""],["","",""],["","",""]] # Yellow
-        self.side5 = [["","",""],["","",""],["","",""]] # Orange
-        self.side6 = [["","",""],["","",""],["","",""]] # Blue
+        self.side1 = [] # Green
+        self.side2 = [] # White
+        self.side3 = [] # Red
+        self.side4 = [] # Yellow
+        self.side5 = [] # Orange
+        self.side6 = [] # Blue
         self.cubeSize = cubeSize
         
         # Fills the cube sides with the correct default colours.
         for i in range(cubeSize):
+            self.side1.append([])
+            self.side2.append([])
+            self.side3.append([])
+            self.side4.append([])
+            self.side5.append([])
+            self.side6.append([])
+            
             for j in range(cubeSize):
-                self.side1[i][j] = "G"
-                self.side2[i][j] = "W"
-                self.side3[i][j] = "R"
-                self.side4[i][j] = "Y"
-                self.side5[i][j] = "O"
-                self.side6[i][j] = "B"
+                self.side1[i].append("G")
+                self.side2[i].append("W")
+                self.side3[i].append("R")
+                self.side4[i].append("Y")
+                self.side5[i].append("O")
+                self.side6[i].append("B")
     
     # Displays the current state of the cube to the console. Very useful for
     # debugging!
@@ -124,7 +131,7 @@ class rubikCube:
     # Randomly shuffles the cube a given number of times to ensure a completely 
     # random shuffle. 25 is recommended as the minimum to ensure a decent 
     # shuffle, but anything more than 100 or so is probably overkill - however 
-    # there is no true upper limit given decent hardware.
+    # there is no true upper limit.
     def randomShuffle(self, numberOfShuffles):
         
         # Blank string which will later hold the instructions for randomly
