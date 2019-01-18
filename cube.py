@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Cube Object(s)
 
-v0.6 (alpha)
+v0.7 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -9,6 +9,7 @@ Oli Matthews 2019
 # Imports relevant libraries.
 from random import randint
 import rotations as rt
+import dev
 
 # Contains functions for the Rubik's cube object.
 class rubikCube:
@@ -100,7 +101,8 @@ class rubikCube:
     # and the number of turns to rotate that face.
     def followSequence(self, inputSequence):
         
-#        print(inputSequence) # DEBUGGING TOOL ONLY - remove or it spams the console HARD! You have been warned.
+        if dev.devSettings.sequencePrinting == True:
+            print(inputSequence) # Part of dev functionality, default is off.
         
         for i in range(int(len(inputSequence)/2)):
             if inputSequence[0] == "L":
@@ -131,22 +133,46 @@ class rubikCube:
         
         for i in range(numberOfShuffles):
             # Gets a random integer.
-            turnDirection = randint(1,6)
+            turnDirection = randint(1,18)
             
             # Uses the random integer to pick a direction to rotate the cube,
             # then adds that instruction to the sequence.
             if turnDirection == 1:
                 shufflingSequence = shufflingSequence + "L1" # Left 1 turn
             elif turnDirection == 2:
-                shufflingSequence = shufflingSequence + "R1" # Right 1 turn
+                shufflingSequence = shufflingSequence + "L2" # Left 2 turns
             elif turnDirection == 3:
-                shufflingSequence = shufflingSequence + "U1" # Up 1 turn
+                shufflingSequence = shufflingSequence + "L3" # Left 3 turns
             elif turnDirection == 4:
-                shufflingSequence = shufflingSequence + "D1" # Down 1 turn
+                shufflingSequence = shufflingSequence + "R1" # Right 1 turn
             elif turnDirection == 5:
-                shufflingSequence = shufflingSequence + "F1" # Front 1 turn
+                shufflingSequence = shufflingSequence + "R2" # Right 2 turns
             elif turnDirection == 6:
+                shufflingSequence = shufflingSequence + "R3" # Right 3 turns
+            elif turnDirection == 7:
+                shufflingSequence = shufflingSequence + "U1" # Up 1 turn
+            elif turnDirection == 8:
+                shufflingSequence = shufflingSequence + "U2" # Up 2 turns
+            elif turnDirection == 9:
+                shufflingSequence = shufflingSequence + "U3" # Up 3 turns
+            elif turnDirection == 10:
+                shufflingSequence = shufflingSequence + "D1" # Down 1 turn
+            elif turnDirection == 11:
+                shufflingSequence = shufflingSequence + "D2" # Down 2 turns
+            elif turnDirection == 12:
+                shufflingSequence = shufflingSequence + "D3" # Down 3 turns
+            elif turnDirection == 13:
+                shufflingSequence = shufflingSequence + "F1" # Front 1 turn
+            elif turnDirection == 14:
+                shufflingSequence = shufflingSequence + "F2" # Front 2 turns
+            elif turnDirection == 15:
+                shufflingSequence = shufflingSequence + "F3" # Front 3 turns
+            elif turnDirection == 16:
                 shufflingSequence = shufflingSequence + "B1" # Back 1 turn
+            elif turnDirection == 17:
+                shufflingSequence = shufflingSequence + "B2" # Back 2 turns
+            elif turnDirection == 18:
+                shufflingSequence = shufflingSequence + "B3" # Back 3 turns
         
         # Uses the followSequence function to follow the randomly generated
         # sequence.
