@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Cube Object(s)
 
-v0.8 (alpha)
+v0.9 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -13,16 +13,21 @@ import dev
 
 # Contains functions for the Rubik's cube object.
 class rubikCube:
-    
-    # Initialises the sides of the cube
+
     def __init__(self, cubeSize):
+        
+        # Initialises the sides of the cube
         self.side1 = [] # Green
         self.side2 = [] # White
         self.side3 = [] # Red
         self.side4 = [] # Yellow
         self.side5 = [] # Orange
         self.side6 = [] # Blue
-        self.cubeSize = cubeSize
+        
+        # Initialises other parameters for the cube.
+        self.cubeSize = cubeSize 
+        self.sequenceLog = ""
+        
         
         # Fills the cube sides with the correct default colours.
         for i in range(cubeSize):
@@ -75,63 +80,105 @@ class rubikCube:
         # Given 'L' as input, rotates the left face by a given number of turns.
         if face == "L":
             for i in range(turns):
-                self.side1, self.side2, self.side6, self.side4, self.side5 = rt.rotateLeft(self.side1, self.side2, self.side6, self.side4, self.side5)
+                self.side1, self.side2, self.side6, self.side4, self.side5 = rt.rotateLeft(self.side1, self.side2, self.side6, self.side4, self.side5, False)
         
         # Given 'R' as input, rotates the right face by a given number of turns.
         elif face == "R":
             for i in range(turns):
-                self.side1, self.side2, self.side6, self.side4, self.side3 = rt.rotateRight(self.side1, self.side2, self.side6, self.side4, self.side3)
+                self.side1, self.side2, self.side6, self.side4, self.side3 = rt.rotateRight(self.side1, self.side2, self.side6, self.side4, self.side3, False)
         
         # Given 'U' as input, rotates the up face by a given number of turns.
         elif face == "U":
             for i in range(turns):
-                self.side2, self.side3, self.side4, self.side5, self.side6 = rt.rotateUp(self.side2, self.side3, self.side4, self.side5, self.side6)
+                self.side2, self.side3, self.side4, self.side5, self.side6 = rt.rotateUp(self.side2, self.side3, self.side4, self.side5, self.side6, False)
 
         # Given 'D' as input, rotates the down face by a given number of turns.
         elif face == "D":
             for i in range(turns):
-                self.side2, self.side3, self.side4, self.side5, self.side1 = rt.rotateDown(self.side2, self.side3, self.side4, self.side5, self.side1)
+                self.side2, self.side3, self.side4, self.side5, self.side1 = rt.rotateDown(self.side2, self.side3, self.side4, self.side5, self.side1, False)
         
         # Given 'F' as input, rotates the front face by a given number of turns.
         elif face == "F":
             for i in range(turns):
-                self.side1, self.side3, self.side6, self.side5, self.side2 = rt.rotateFront(self.side1, self.side3, self.side6, self.side5, self.side2)
+                self.side1, self.side3, self.side6, self.side5, self.side2 = rt.rotateFront(self.side1, self.side3, self.side6, self.side5, self.side2, False)
         
         # Given 'B' as input, rotates the back face by a given number of turns.
         elif face == "B":
             for i in range(turns):
-                self.side1, self.side5, self.side6, self.side3, self.side4 = rt.rotateBack(self.side1, self.side5, self.side6, self.side3, self.side4)
-    
+                self.side1, self.side5, self.side6, self.side3, self.side4 = rt.rotateBack(self.side1, self.side5, self.side6, self.side3, self.side4, False)
+        
+        # Given 'LI' as input, rotates the left face inverse by 1 turn.
+        elif face == "LI":
+            self.side1, self.side2, self.side6, self.side4, self.side5 = rt.rotateLeft(self.side1, self.side2, self.side6, self.side4, self.side5, True)
+        
+        # Given 'RI' as input, rotates the right face inverse by 1 turn.
+        elif face == "RI":
+            self.side1, self.side2, self.side6, self.side4, self.side3 = rt.rotateRight(self.side1, self.side2, self.side6, self.side4, self.side3, True)
+        
+        # Given 'UI' as input, rotates the up face inverse by 1 turn.
+        elif face == "UI":
+            self.side2, self.side3, self.side4, self.side5, self.side6 = rt.rotateUp(self.side2, self.side3, self.side4, self.side5, self.side6, True)
+        
+        # Given 'DI' as input, rotates the down face inverse by 1 turn.
+        elif face == "DI":
+            self.side2, self.side3, self.side4, self.side5, self.side1 = rt.rotateDown(self.side2, self.side3, self.side4, self.side5, self.side1, True)
+        
+        # Given 'FI' as input, rotates the front face inverse by 1 turn.
+        elif face == "FI":
+            self.side1, self.side3, self.side6, self.side5, self.side2 = rt.rotateFront(self.side1, self.side3, self.side6, self.side5, self.side2, True)
+        
+        # Given 'BI' as input, rotates the back face inverse by 1 turn.
+        elif face == "BI":
+            self.side1, self.side5, self.side6, self.side3, self.side4 = rt.rotateBack(self.side1, self.side5, self.side6, self.side3, self.side4, True)
+            
     # Takes a sequence of moves of unlimited length, decodes the instructions,
     # and follows them sequentially. 'inputSequence' must be a string with
     # pairs consisting of a letter and a number - denoting the face to rotate,
     # and the number of turns to rotate that face.
     def followSequence(self, inputSequence):
         
+        # Part of dev functionality, default is off.
         if dev.devSettings.sequencePrinting == True:
-            print(inputSequence) # Part of dev functionality, default is off.
+            print(inputSequence)
         
         for i in range(int(len(inputSequence)/2)):
-            if inputSequence[0] == "L":
-                self.rotateSide("L", int(inputSequence[1]))
-            elif inputSequence[0] == "R":
-                self.rotateSide("R", int(inputSequence[1]))
-            elif inputSequence[0] == "U":
-                self.rotateSide("U", int(inputSequence[1]))
-            elif inputSequence[0] == "D":
-                self.rotateSide("D", int(inputSequence[1]))
-            elif inputSequence[0] == "F":
-                self.rotateSide("F", int(inputSequence[1]))
-            elif inputSequence[0] == "B":
-                self.rotateSide("B", int(inputSequence[1]))
+            if inputSequence[1] == "I":
+                if inputSequence[0] == "L":
+                    self.rotateSide("LI", 1)
+                elif inputSequence[0] == "R":
+                    self.rotateSide("RI", 1)
+                elif inputSequence[0] == "U":
+                    self.rotateSide("UI", 1)
+                elif inputSequence[0] == "D":
+                    self.rotateSide("DI", 1)
+                elif inputSequence[0] == "F":
+                    self.rotateSide("FI", 1)
+                elif inputSequence[0] == "B":
+                    self.rotateSide("BI", 1)
+            else: 
+                if inputSequence[0] == "L":
+                    self.rotateSide("L", int(inputSequence[1]))
+                elif inputSequence[0] == "R":
+                    self.rotateSide("R", int(inputSequence[1]))
+                elif inputSequence[0] == "U":
+                    self.rotateSide("U", int(inputSequence[1]))
+                elif inputSequence[0] == "D":
+                    self.rotateSide("D", int(inputSequence[1]))
+                elif inputSequence[0] == "F":
+                    self.rotateSide("F", int(inputSequence[1]))
+                elif inputSequence[0] == "B":
+                    self.rotateSide("B", int(inputSequence[1]))
+            
+            # Part of dev functionality, default is off.
+            if dev.devSettings.saveSolutions == True:
+                self.sequenceLog = self.sequenceLog + str(inputSequence[:2])
             
             # Removes the last instruction from the sequence once complete.
             inputSequence = inputSequence[2:]
     
     # Randomly shuffles the cube a given number of times to ensure a completely 
     # random shuffle. 25 is recommended as the minimum to ensure a decent 
-    # shuffle, but anything more than 100 or so is probably overkill - however 
-    # there is no true upper limit.
+    # shuffle, but anything more than 100 or so is probably overkill.
     def randomShuffle(self, numberOfShuffles):
         
         # Blank string which will later hold the instructions for randomly
