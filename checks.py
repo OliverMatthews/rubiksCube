@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Cube State Checking Algorithms
 
-v0.6 (alpha)
+v0.9 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -24,7 +24,7 @@ def greenCross(side):
     # Returns true otherwise.
     else:
         return True
-    
+
 # Checks whether the 'green side' step has been completed correctly. Takes one
 # side matrix as input.
 def greenSide(side):
@@ -88,25 +88,36 @@ def alignedCorners(side2, side3, side4, side5):
 # should be the matrices of the sides adjacent to the green side.
 def firstTwoRows(side2, side3, side4, side5):
     
+    # Returns false if any of the white pieces in the two rows closest to the
+    # green side are incorrectly placed.
     for i in range(len(side2)-1):
         for j in range(len(side2)):
             if side2[i+1][j] != "W":
                 return False
     
+    # Returns false if any of the red pieces in the two rows closest to the
+    # green side are incorrectly placed.
     for i in range(len(side3)-1):
         for j in range(len(side3)):
             if side3[i+1][j] != "R":
                 return False
     
+    # Returns false if any of the yellow pieces in the two rows closest to the
+    # green side are incorrectly placed.
     for i in range(len(side4)-1):
         for j in range(len(side4)):
             if side4[i+1][j] != "Y":
                 return False
     
+    # Returns false if any of the orange pieces in the two rows closest to the
+    # green side are incorrectly placed.
     for i in range(len(side5)-1):
         for j in range(len(side5)):
             if side5[i+1][j] != "O":
                 return False
+    
+    # Returns true otherwise.
+    return True
 
 # Checks whether the 'blue cross' step has been completed correctly. Takes one
 # side matrix as input.
@@ -158,7 +169,9 @@ def topLayerCorners(side2, side3, side4, side5):
     # Returns true otherwise.
     else:
         return True
-    
+
+# Checks whether the entire cube is completed. Takes all 6 side matrices as
+# input.
 def wholeCube(side1, side2, side3, side4, side5, side6):
     # Cycles through every entry in side 1 and returns false if any are not
     # green.
@@ -204,3 +217,22 @@ def wholeCube(side1, side2, side3, side4, side5, side6):
     
     # Returns true otherwise.
     return True
+
+# IN DEVELOPMENT
+# Checks whether the entire cube is completed. Takes all 6 side matrices as
+# input.
+def wholeCubeV2(side1, side2, side3, side4, side5, side6):
+    if side1 != [['G','G','G'],['G','G','G'],['G','G','G']]:
+        return False
+    elif side2 != [['W','W','W'],['W','W','W'],['W','W','W']]:
+        return False
+    elif side3 != [['R','R','R'],['R','R','R'],['R','R','R']]:
+        return False
+    elif side4 != [['Y','Y','Y'],['Y','Y','Y'],['Y','Y','Y']]:
+        return False
+    elif side5 != [['O','O','O'],['O','O','O'],['O','O','O']]:
+        return False
+    elif side6 != [['B','B','B'],['B','B','B'],['B','B','B']]:
+        return False
+    else:
+        return True

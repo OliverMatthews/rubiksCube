@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Developer Functions
 
-v0.8 (alpha)
+v0.9 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -12,13 +12,17 @@ import datetime
 import solve
 import checks as chk
 
+# Class contains developer mode settings which can be toggled on or off
 class devFunctions:
     def __init__(self):
         self.sequencePrinting = False
-        self.simFailStatsPrinting = False
+        self.simFailStatsPrinting = True
         self.simTimeStatusPrinting = True
         self.finalTimeStatsPrinting = True
-        
+        self.saveSolutions = True
+    
+    # Toggles whether all sequences followed should be printed to the console.
+    # Default state for this is OFF.    
     def toggleSequencePrinting(self, boolean):
         if boolean == True:
             self.sequencePrinting = True
@@ -27,6 +31,9 @@ class devFunctions:
             self.sequencePrinting = False
             print("DEV: Sequence printing is now OFF! (this is the default state)")
     
+    # Toggles whether statistics pertaining to the pass/fail rate of 
+    # simulations should be collected and printed to the console. Default state
+    # for this is OFF.
     def toggleSimFailStatsPrinting(self, boolean):
         if boolean == True:
             self.simFailStatsPrinting = True
@@ -34,7 +41,9 @@ class devFunctions:
         elif boolean == False:
             self.simFailStatsPrinting = False
             print("DEV: Simulation pass/fail statistics printing is now OFF! (this is the default state)")
-            
+    
+    # Toggles whether the estimated time remaining should be printed to the
+    # console when running simulations. Default state for this is ON.
     def toggleSimTimeStatusPrinting(self, boolean):
         if boolean == True:
             self.simTimeStatusPrinting = True
@@ -43,6 +52,9 @@ class devFunctions:
             self.simTimeStatusPrinting = False
             print("DEV: Simulation estimated time remaining status printing is now OFF!")
     
+    # Toggles whether statistics pertaining to overall time taken for
+    # simulations to run should be collected and printed to the console.
+    # Default state for this is ON.
     def toggleFinalTimeStatsPrinting(self, boolean):
         if boolean == True:
             self.finalTimeStatsPrinting = True
@@ -51,6 +63,15 @@ class devFunctions:
             self.finalTimeStatsPrinting = True
             print("DEV: Simulation final time statistics printing is now OFF!")
             
+    # Toggles whether the initial cube state and the sequence followed to solve
+    # that cube should be saved to a log file. Default state for this is OFF.
+    def toggleSaveSolutions(self, boolean):
+        if boolean == True:
+            self.saveSolutions = True
+            print("DEV: Cube data and solution steps logging is now ON!")
+        elif boolean == False:
+            self.saveSolutions = False
+            print("DEV: Cube data and solution steps logging is now OFF! (this is the default state)")
             
 # Intitialises the dev mode settings for use.
 devSettings = devFunctions()
@@ -80,11 +101,19 @@ def runSimulations(numberOfSimulations):
         # Randomly shuffles the cube 100 times - enough to guarantee a random
         # shuffle.
         solve.a.randomShuffle(30)
+        if devSettings.saveSolutions == True:
+            solve.a.sequenceLog = ""
+            logCubeState(simCounter + 1)
         
         # Runs the solving functions to complete the cube.
         solve.totalSolve()
         simCounter += 1
         
+        # Prints the complete sequence of moves used to solve the cube, if
+        # sequence logging is enabled in dev settings.
+        if devSettings.saveSolutions == True:
+            logSequence()
+            
         # Only runs if the simFailStatsPrinting developer setting is enabled.
         if devSettings.simFailStatsPrinting == True:
             
@@ -156,4 +185,52 @@ def runSimulations(numberOfSimulations):
         print("The total time to run " + str(numberOfSimulations) + " simulations was " + str(datetime.timedelta(seconds=int(timeTaken))) + " (HH:MM:DD)")
         print("An average of around " + str(int(simsPerSecond)) + " simulations were run per second.")
         print("Average time to complete one simulation was " + str(avgTimePerSim) + " seconds.")
+
+def logSequence():
+    file = open("sequenceLog.txt", "a")
+    file.write("\n" + str(int(len(solve.a.sequenceLog)/2)) + " moves were taken to complete this cube.")
+    file.write("\n" + "Solution sequence: " + "\n" + solve.a.sequenceLog + "\n" + "\n")
+    file.close()
     
+def logCubeState(simNo):
+    file = open("sequenceLog.txt", "a")
+    file.write("SIMULATION NUMBER " + str(simNo))
+    file.write("\n" + "Cube starting state: ")
+    
+    file.write("\n" + "Side 1: ")
+    for i in range(solve.a.cubeSize):
+        file.write("\n")
+        for j in range(solve.a.cubeSize):
+            file.write(solve.a.side1[i][j] + " ")
+    
+    file.write("\n" + "Side 2: ")
+    for i in range(solve.a.cubeSize):
+        file.write("\n")
+        for j in range(solve.a.cubeSize):
+            file.write(solve.a.side2[i][j] + " ")
+            
+    file.write("\n" + "Side 3: ")
+    for i in range(solve.a.cubeSize):
+        file.write("\n")
+        for j in range(solve.a.cubeSize):
+            file.write(solve.a.side3[i][j] + " ")
+            
+    file.write("\n" + "Side 4: ")
+    for i in range(solve.a.cubeSize):
+        file.write("\n")
+        for j in range(solve.a.cubeSize):
+            file.write(solve.a.side4[i][j] + " ")
+            
+    file.write("\n" + "Side 5: ")
+    for i in range(solve.a.cubeSize):
+        file.write("\n")
+        for j in range(solve.a.cubeSize):
+            file.write(solve.a.side5[i][j] + " ")
+            
+    file.write("\n" + "Side 6: ")
+    for i in range(solve.a.cubeSize):
+        file.write("\n")
+        for j in range(solve.a.cubeSize):
+            file.write(solve.a.side6[i][j] + " ")
+            
+    file.close()

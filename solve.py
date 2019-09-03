@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Solving Algorithms
 
-v0.6 (alpha)
+v0.9 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -13,6 +13,7 @@ import cube
 # Initialises the game cube from the rubikCube class with a cube size of 3.
 a = cube.rubikCube(3)
 
+# Completes the 'green cross' step of solving the cube.
 def solveGreenCross():
     sequenceToFollow = ""
     counter = 0
@@ -115,6 +116,9 @@ def solveGreenCross():
         if counter > 10:
             break
 
+# Completes the 'green corners' step of solving the cube. Should only be run
+# as part of the totalSolve() function, as it requires all previous solving
+# steps to have been completed.
 def solveGreenCorners():
     sequenceToFollow = ""
     counter = 0
@@ -181,11 +185,17 @@ def solveGreenCorners():
         counter += 1
         if counter > 10:
             break
-        
+
+# Re-arranges the edge pieces neares the green side to match the colour of the
+# center pieces on their respective faces. Should only be run as part of the
+# totalSolve() function, as it requires all previous solution steps to have
+# been completed first.
 def fixAlignedCenters():
+    # Variables required for function to operate correctly.
     sequenceToFollow = ""
     counter = 0
     
+    # Runs until the relevant edge pieces are correctly placed.
     while chk.alignedCenters(a.side2, a.side3, a.side4, a.side5) != True:
         a.followSequence(sequenceToFollow)
         sequenceToFollow = ""
