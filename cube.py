@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Cube Object(s)
 
-v0.9 (alpha)
+v0.10 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -27,7 +27,6 @@ class rubikCube:
         # Initialises other parameters for the cube.
         self.cubeSize = cubeSize 
         self.sequenceLog = ""
-        
         
         # Fills the cube sides with the correct default colours.
         for i in range(cubeSize):
