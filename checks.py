@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Cube State Checking Algorithms
 
-v0.9 (alpha)
+v0.10 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -217,22 +217,3 @@ def wholeCube(side1, side2, side3, side4, side5, side6):
     
     # Returns true otherwise.
     return True
-
-# IN DEVELOPMENT
-# Checks whether the entire cube is completed. Takes all 6 side matrices as
-# input.
-def wholeCubeV2(side1, side2, side3, side4, side5, side6):
-    if side1 != [['G','G','G'],['G','G','G'],['G','G','G']]:
-        return False
-    elif side2 != [['W','W','W'],['W','W','W'],['W','W','W']]:
-        return False
-    elif side3 != [['R','R','R'],['R','R','R'],['R','R','R']]:
-        return False
-    elif side4 != [['Y','Y','Y'],['Y','Y','Y'],['Y','Y','Y']]:
-        return False
-    elif side5 != [['O','O','O'],['O','O','O'],['O','O','O']]:
-        return False
-    elif side6 != [['B','B','B'],['B','B','B'],['B','B','B']]:
-        return False
-    else:
-        return True
