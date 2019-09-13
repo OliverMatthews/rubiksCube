@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Developer Functions
 
-v0.9 (alpha)
+v0.10 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -14,6 +14,7 @@ import checks as chk
 
 # Class contains developer mode settings which can be toggled on or off
 class devFunctions:
+    # Initialises the settings and sets the default state for each toggle.
     def __init__(self):
         self.sequencePrinting = False
         self.simFailStatsPrinting = True

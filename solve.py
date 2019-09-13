@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Solving Algorithms
 
-v0.9 (alpha)
+v0.10 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
