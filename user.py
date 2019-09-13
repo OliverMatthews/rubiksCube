@@ -46,15 +46,32 @@ def printLayout(colour):
 # This function queries the user for each of the colours on a side of the cube,
 # formats them as a side matrix, then returns the side matrix.
 def getInput(colour):
-    # Asks the user for each of the 8 required inputs.
-    colour1 = input("1: ")
-    colour2 = input("2: ")
-    colour3 = input("3: ")
-    colour4 = input("4: ")
-    colour5 = input("5: ")
-    colour6 = input("6: ")
-    colour7 = input("7: ")
-    colour8 = input("8: ")
+    # Asks the user for each of the 8 required inputs whilst checking to make
+    # sure the input is valid, using sanitiseCubeInput().
+    colour1 = str(input("1: "))
+    while sanitiseCubeInput(colour1) != True:
+        colour1 = str(input("1: "))
+    colour2 = str(input("2: "))
+    while sanitiseCubeInput(colour2) != True:
+        colour = str(input("2: "))
+    colour3 = str(input("3: "))
+    while sanitiseCubeInput(colour3) != True:
+        colour3 = str(input("3: "))
+    colour4 = str(input("4: "))
+    while sanitiseCubeInput(colour4) != True:
+        colour4 = str(input("4: "))
+    colour5 = str(input("5: "))
+    while sanitiseCubeInput(colour5) != True:
+        colour5 = str(input("5: "))
+    colour6 = str(input("6: "))
+    while sanitiseCubeInput(colour6) != True:
+        colour6 = str(input("6: "))
+    colour7 = str(input("7: "))
+    while sanitiseCubeInput(colour7) != True:
+        colour7 = str(input("7: "))
+    colour8 = str(input("8: "))
+    while sanitiseCubeInput(colour8) != True:
+        colour8 = str(input("8: "))
 
     # Merges the inputted colours into a side matrix.
     side = [[colour1, colour2, colour3], [colour4, colour, colour5], [colour6, colour7, colour8]]
@@ -91,8 +108,16 @@ def sequenceSpacer(sequence):
     # Repeatedly gets the next move from the sequence and inserts a comma and a
     # space.
     for i in range(int(len(sequence)/2)):
-        spacedSequence = spacedSequence + str(sequence[0:2]) + ", "
-        sequence = sequence[2:]
+        
+        # Checks if there are still more moves in the sequence. If there are,
+        # the move is formatted with a comma and a space after it. If it is the
+        # last move in the sequence, the move is formatted with just a period.
+        if int(len(sequence)) > 2:
+            spacedSequence = spacedSequence + str(sequence[0:2]) + ", "
+            sequence = sequence[2:]
+        else: 
+            spacedSequence = spacedSequence + str(sequence[0:2]) + "."
+            sequence = ""
 
     # Returns the sequence with commas and spaces.
     return spacedSequence
@@ -116,3 +141,25 @@ def instructions():
     instructionsForUser = sequenceSpacer(solve.a.sequenceLog)
     print("There are " + str(int(len(solve.a.sequenceLog)/2)) + " moves needed to complete this cube.")
     print(instructionsForUser)
+
+# This function checks the user input to make sure only cube colours have been
+# entered. Takes a string as input, and returns a string.
+def sanitiseCubeInput(user):
+    # Returns true if a cube colour is correctly entered.
+    if user == "G":
+        return True
+    elif user == "W":
+        return True
+    elif user == "R":
+        return True
+    elif user == "Y":
+        return True
+    elif user == "O":
+        return True
+    elif user == "B":
+        return True
+    # Returns false and prints a key for the user if the input is not
+    # recognisable as a cube colour.
+    else:
+        print("That input was not valid. Please enter 'G' for Green, 'W' for White, 'R' for Red, 'Y' for Yellow, 'O' for Orange or 'B' for Blue. Input must be CAPITALISED! Turning on CAPSLOCK is recommended here.")
+        return False
