@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - User Cube Input(s)
 
-v0.10 (alpha)
+v0.11 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -108,7 +108,6 @@ def sequenceSpacer(sequence):
     # Repeatedly gets the next move from the sequence and inserts a comma and a
     # space.
     for i in range(int(len(sequence)/2)):
-        
         # Checks if there are still more moves in the sequence. If there are,
         # the move is formatted with a comma and a space after it. If it is the
         # last move in the sequence, the move is formatted with just a period.

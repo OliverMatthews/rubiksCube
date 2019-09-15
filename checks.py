@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Cube State Checking Algorithms
 
-v0.10 (alpha)
+v0.11 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
