@@ -100,27 +100,6 @@ def getCube():
     solve.a.side5 = getSide("O")
     solve.a.side6 = getSide("B")
 
-# This function puts a comma and a space between each move in a given sequence.
-def sequenceSpacer(sequence):
-    # Sets the output sequence to be empty.
-    spacedSequence = ""
-    
-    # Repeatedly gets the next move from the sequence and inserts a comma and a
-    # space.
-    for i in range(int(len(sequence)/2)):
-        # Checks if there are still more moves in the sequence. If there are,
-        # the move is formatted with a comma and a space after it. If it is the
-        # last move in the sequence, the move is formatted with just a period.
-        if int(len(sequence)) > 2:
-            spacedSequence = spacedSequence + str(sequence[0:2]) + ", "
-            sequence = sequence[2:]
-        else: 
-            spacedSequence = spacedSequence + str(sequence[0:2]) + "."
-            sequence = ""
-
-    # Returns the sequence with commas and spaces.
-    return spacedSequence
-
 # This function prints out the instructions for a user to follow. Should only
 # be used after having set the side matrices in the active cube (solve.a.sideX)
 # to the desired values.
@@ -137,7 +116,7 @@ def instructions():
     solve.totalSolve()
 
     # Prints the instructions for the user to follow.
-    instructionsForUser = sequenceSpacer(solve.a.sequenceLog)
+    instructionsForUser = solve.cube.dev.sequenceSpacer(solve.a.sequenceLog)
     print("There are " + str(int(len(solve.a.sequenceLog)/2)) + " moves needed to complete this cube.")
     print(instructionsForUser)
 
