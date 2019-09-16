@@ -190,12 +190,12 @@ def runSimulations(numberOfSimulations):
 def logSequence():
     file = open("sequenceLog.txt", "a")
     file.write("\n" + str(int(len(solve.a.sequenceLog)/2)) + " moves were taken to complete this cube.")
-    file.write("\n" + "Solution sequence: " + "\n" + solve.a.sequenceLog + "\n" + "\n")
+    file.write("\n" + "Solution sequence: " + "\n" + sequenceSpacer(solve.a.sequenceLog) + "\n" + "\n")
     file.close()
     
 def logCubeState(simNo):
     file = open("sequenceLog.txt", "a")
-    file.write("SIMULATION NUMBER " + str(simNo))
+    file.write("*** SIMULATION NUMBER " + str(simNo) + " ***")
     file.write("\n" + "Cube starting state: ")
     
     file.write("\n" + "Side 1: ")
@@ -235,3 +235,24 @@ def logCubeState(simNo):
             file.write(solve.a.side6[i][j] + " ")
             
     file.close()
+
+# This function puts a comma and a space between each move in a given sequence.
+def sequenceSpacer(sequence):
+    # Sets the output sequence to be empty.
+    spacedSequence = ""
+    
+    # Repeatedly gets the next move from the sequence and inserts a comma and a
+    # space.
+    for i in range(int(len(sequence)/2)):
+        # Checks if there are still more moves in the sequence. If there are,
+        # the move is formatted with a comma and a space after it. If it is the
+        # last move in the sequence, the move is formatted with just a period.
+        if int(len(sequence)) > 2:
+            spacedSequence = spacedSequence + str(sequence[0:2]) + ", "
+            sequence = sequence[2:]
+        else: 
+            spacedSequence = spacedSequence + str(sequence[0:2]) + "."
+            sequence = ""
+
+    # Returns the sequence with commas and spaces.
+    return spacedSequence
