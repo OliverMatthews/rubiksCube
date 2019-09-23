@@ -105,6 +105,9 @@ def option1():
             print("That selection was not recognised.")
             continue
 
+# This function is run if the user opts to run simulations. It asks the user
+# how many simulations they would like to run (and checks that it is a sensible
+# number), then runs them.
 def option2():
     # Asks the user how many simulations they would like to run.
     numberOfSimulations = int(input("How many simulations would you like to run? "))
@@ -132,23 +135,33 @@ def option2():
             # If the numbers do not match, cancels running the simulations.
             print("Inputs did not match - running simulations cancelled.")
 
+    # Loops the following submenu until a valid selection is made.
     while True:
+        # Prints a list of options for the user.
         print("Would you like to run more simulations?")
         print("1 - Run more simulations")
         print("0 - Return to main menu")
         userInput = int(input(""))
-
+        
+        # If the user opts to return to the main menu.
         if userInput == 0:
             return False
             break
+
+        # If the user opts to run more simulations.
         elif userInput == 1:
             return True
             break
+
+        # If the user makes an invalid selection.
         else:
             print("That selection was not recognised.")
             continue
-        
+    
+# This function is run if the user opts to change the developer settings.
+# A sub-menu is provided to ask the user which setting(s) they wish to alter.
 def option3():
+    # Prints a list of options for the user.
     print("Please select a developer setting to change from the list below:")
     print("1 - Sequence Printing")
     print("2 - Simulation pass/fail statistics printing")
@@ -157,6 +170,7 @@ def option3():
     print("5 - Solution Saving")
     userInput = int(input(""))
 
+    # Runs whichever selection the user makes.
     if userInput == 1:
         option3_1()
     elif userInput == 2:
@@ -167,120 +181,185 @@ def option3():
         option3_4()
     elif userInput == 5:
         option3_5()
+    # If the user makes an invalid selection, prints that the selection was
+    # not recognised.
     else:
         print("That selection was not recognised.")
 
+    # Loops the following submenu until a valid selection is made.
     while True:
         print("Would you like to change other settings?")
         print("1 - Change more settings")
         print("0 - Return to main menu")
         userInput = int(input(""))
 
+        # Runs whichever selection the user makes.
         if userInput == 0:
             return False
             break
         elif userInput == 1:
             return True
             break
+        # If the user makes an invalid selection, prints that the selection
+        # was not recognised.
         else:
             print("That selection was not recognised.")
             continue
 
+# This function is run if the user opts to change the state of the sequence
+# printing setting. A sub-menu is provided to ask the user whether they
+# wish to enable or disable sequence printing.
 def option3_1():
+    # Prints a list of options for the user.
     print("Please choose whether to enable or disable Sequence Printing.")
     print("1 - Enable (turn ON sequence printing)")
     print("2 - Disable (turn OFF sequence printing)")
     userInput = int(input(""))
 
+    # Runs whichever selection the user makes.
     if userInput == 1:
         option3_1_1()
     elif userInput == 2:
         option3_1_2()
+    # If the user makes an invalid selection, prints that the selection was
+    # not recognised.
     else:
         print("That selection was not recognised.")
 
+# This function is run if the user opts to enable sequence printing.
 def option3_1_1():
     dev.devSettings.toggleSequencePrinting(True)
 
+# This function is run if the user opts to disable sequence printing.
 def option3_1_2():
     dev.devSettings.toggleSequencePrinting(False)
 
+# This function is run if the user opts to change the state of the simulation
+# pass/fail statistics printing setting. A sub-menu is provided to ask the user
+# whether they wish to enable or disable simulation pass/fail statistics
+# printing.
 def option3_2():
+    # Prints a list of options for the user.
     print("Please choose whether to enable or disable simulation pass/fail statistics printing")
     print("1 - Enable (turn ON simulation pass/fail statistics printing)")
     print("2 - Disable (turn OFF simulation pass/fail statistics printing)")
     userInput = int(input(""))
 
+    # Runs whichever selection the user makes.
     if userInput == 1:
         option3_2_1()
     elif userInput == 2:
         option3_2_2()
+    # If the user makes an invalid selection, prints that the selection was
+    # not recognised.
     else:
         print("That selection was not recognised.")
 
+# This function is run if the user opts to enable simulation pass/fail
+# statistics printing.
 def option3_2_1():
     dev.devSettings.toggleSimFailStatsPrinting(True)
 
+# This function is run if the user opts to disable simulation pass/fail
+# statistics printing.
 def option3_2_2():
     dev.devSettings.toggleSimFailStatsPrinting(False)
 
+# This function is run if the user opts to change the state of the simulation
+# estimated time remaining status printing setting. A sub-menu is provided to
+# ask the user whether they wish to enable or disable simulation estimated time
+# remaining status printing.
 def option3_3():
+    # Prints a list of options for the user.
     print("Please choose whether to enable or disable simulation estimated time remaining status printing")
     print("1 - Enable (turn ON simulation estimated time remaining status printing)")
     print("2 - Disable (turn OFF simulation estimated time remaining status printing)")
     userInput = int(input(""))
 
+    # Runs whichever selection the user makes.
     if userInput == 1:
         option3_3_1()
     elif userInput == 2:
         option3_3_2()
+    # If the user makes an invalid selection, prints that the selection was
+    # not recognised.
     else:
         print("That selection was not recognised.")
 
+# This function is run if the user opts to enable simulation estimated time
+# remaining status printing.
 def option3_3_1():
     dev.devSettings.toggleSimTimeStatusPrinting(True)
 
+# This function is run if the user opts to disable simulation estimated time
+# remaining status printing.
 def option3_3_2():
     dev.devSettings.toggleSimTimeStatusPrinting(False)
 
+# This function is run if the user opts to change the state of the simulation
+# final time statistics printing setting. A sub-menu is provided to ask the
+# user whether they wish to enable or disable the simulation final time
+# statistics printing setting.
 def option3_4():
+    # Prints a list of options for the user.
     print("Please choose whether to enable or disable simulation final time statistics printing")
     print("1 - Enable (turn ON simulation final time statistics printing)")
     print("2 - Disable (turn OFF simulation final time statistics printing)")
     userInput = int(input(""))
 
+    # Runs whichever selection the user makes.
     if userInput == 1:
         option3_4_1()
     elif userInput == 2:
         option3_4_2()
+    # If the user makes an invalid selection, prints that the selection was not
+    # recognised.
     else:
         print("That selection was not recognised.")
     
+# This function is run if the user opts to enable simulation final time
+# statistics printing.
 def option3_4_1():
     dev.devSettings.toggleFinalTimeStatsPrinting(True)
 
+# This function is run if the user opts to disable simulation final time
+# statistics printing.
 def option3_4_2():
     dev.devSettings.toggleFinalTimeStatsPrinting(False)
 
+# This function is run if the user opts to change the state of the solution
+# saving setting. A sub-menu is provided to ask the user whether they wish to
+# enable or disable the solution saving setting.
 def option3_5():
+    # Prints a list of options for the user.
     print("Please choose whether to enable or disable solution saving")
     print("1 - Enable (turn ON solution saving)")
     print("2 - Disable (turn OFF solution saving)")
     userInput = int(input(""))
 
+    # Runs whichever selection the user makes.
     if userInput == 1:
         option3_5_1()
     elif userInput == 2:
         option3_5_2()
+    # If the user makes an invalid selection, prints that the selection was not
+    # recognised.
     else:
         print("That selection was not recognised.")
-    
+
+# This function is run if the user opts to enable the saving solutions setting.
 def option3_5_1():
     dev.devSettings.toggleSaveSolutions(True)
 
+# This function is run if the user opts to disable the saving solutions
+# setting.
 def option3_5_2():
     dev.devSettings.toggleSaveSolutions(False)
 
+# Loops running the main menu until the user opts to exit the program.
 menuBool = True
 while menuBool == True:
+    # Runs the main menu function. All options in the main menu return true
+    # to continue running the loop, with the exception of the option to exit,
+    # which returns false and ends execution of the program.
     menuBool = mainMenu()
