@@ -7,10 +7,13 @@ History available at github.com/OliverMatthews/rubiksCube/
 Oli Matthews 2019
 """
 # Imports relevant libraries
+import solve
+import dev
+from multiprocessing import Pool
+import psutil
 import time
 import datetime
-import solve
-import checks as chk
+from tqdm import tqdm
 
 # Class contains developer mode settings which can be toggled on or off
 class devFunctions:
@@ -18,9 +21,9 @@ class devFunctions:
     def __init__(self):
         self.sequencePrinting = False
         self.simFailStatsPrinting = True
-        self.simTimeStatusPrinting = True
+        self.simTimeStatusPrinting = False # This setting should be removed.
         self.finalTimeStatsPrinting = True
-        self.saveSolutions = True
+        self.saveSolutions = False
     
     # Toggles whether all sequences followed should be printed to the console.
     # Default state for this is OFF.    
@@ -77,104 +80,82 @@ class devFunctions:
 # Intitialises the dev mode settings for use.
 devSettings = devFunctions()
 
-# Useful for running many simulations of randomly shuffling the cube, then
-# solving it and testing to ensure that the cube is arranged correctly. Prints
-# information to the console after running all simulations indicating success
-# or failure statistics.
-def runSimulations(numberOfSimulations):
-    # Used to count the number of complete simulations.
-    simCounter = 0
-    
-    # Used to count the total number of successes and failures.
-    if devSettings.simFailStatsPrinting == True:
-        successCounter = 0
-        failCounter = 0
+# Function to run a single simulation.
+def runSimulation(simNumber):
+    # Initialises a new cube.
+    gameCube = solve.cube.rubikCube(3)
 
-    # Used for estimating the time remaining on the simulations.
-    if devSettings.simTimeStatusPrinting == True:
-        lastPercentageComplete = 0 # Only required if relevant setting enabled.
+    # Randomly shuffles the cube 30 times - enough to ensure a random shuffle.
+    gameCube.randomShuffle(30)
+    if devSettings.saveSolutions == True:
+        gameCube.sequenceLog = ""
+        logCubeState((simNumber + 1), gameCube)
+
+    # Runs the solving procedure on the cube.
+    solve.totalSolve(gameCube)
+
+    # Saves the complete sequence of moves used to solve the cube, if sequence
+    # logging is enabled in the developer settings.
+    if devSettings.saveSolutions == True:
+        logSequence(gameCube)
+
+    # Checks that the cube has been completed correctly. Returns false if the
+    # cube was not solved, and returns true if the cube was solved.
+    if solve.chk.wholeCube(gameCube.side1, gameCube.side2, gameCube.side3, gameCube.side4, gameCube.side5, gameCube.side6) == False:
+        return False
+    else:
+        return True
+
+# Function to run many simulations. Each simulation randomly shuffles the cube,
+# solves it, and checks the end state of the cube is correctly solved. After
+# running all simulations, prints information indicating various statistics
+# such as pass/fail count and time taken.
+def runManySimulations(numberOfSimulations):
+    # Marks the starting time.
     startTime = time.time()
+
+    # Gets the number of real (not logical) CPU cores.
+    cores = int(psutil.cpu_count(logical=False))
+
+    # Initialises the results list.
+    res = []
+
+    # Initialises as many processes as there are real (not logical) CPU cores
+    # as a pool, then uses the pool to complete all simulations. Keeps track
+    # of how many passes and fails there were in the 'res' list. A progress
+    # bar is shown whilst running simulations, as a large number of simulations
+    # can take some time to complete.
+    with Pool(processes=cores) as pool:
+        with tqdm(total=numberOfSimulations) as progressBar:
+            for i, result in tqdm(enumerate(pool.imap(runSimulation, range(numberOfSimulations)))):
+                progressBar.update()
+                res.append(result)
     
-    # Loop runs until the total number of simulations completed is the same as
-    # the number of simulations required.
-    while simCounter < numberOfSimulations:
-        
-        # Randomly shuffles the cube 100 times - enough to guarantee a random
-        # shuffle.
-        solve.a.randomShuffle(30)
-        if devSettings.saveSolutions == True:
-            solve.a.sequenceLog = ""
-            logCubeState(simCounter + 1)
-        
-        # Runs the solving functions to complete the cube.
-        solve.totalSolve()
-        simCounter += 1
-        
-        # Prints the complete sequence of moves used to solve the cube, if
-        # sequence logging is enabled in dev settings.
-        if devSettings.saveSolutions == True:
-            logSequence()
-            
-        # Only runs if the simFailStatsPrinting developer setting is enabled.
-        if devSettings.simFailStatsPrinting == True:
-            
-            # If the simulation fails the wholeCube check, adds 1 to the fail
-            # counter. Otherwise, adds one to the success counter. 
-            if chk.wholeCube(solve.a.side1, solve.a.side2, solve.a.side3, solve.a.side4, solve.a.side5, solve.a.side6) == False:
-                failCounter += 1
-            else:
-                successCounter += 1
-        
-        # Only runs if the simTimeStatusPrinting developer setting is enabled.
-        if devSettings.simTimeStatusPrinting == True:
-            # Calculates the percentage completion of all the simulations.
-            percentageComplete = (simCounter / numberOfSimulations) * 100
-            
-            # If the percentage completion (as an integer) has increased, 
-            # prints the percentage completion and the estimated time remaining
-            # to the console.
-            if int(percentageComplete) > int(lastPercentageComplete):
-                print(str(int(percentageComplete)) + "% done on " + str(int(numberOfSimulations)) + " simulations.")
-                
-                # Time data
-                splitTime = time.time() - startTime
-                timePerPercent = splitTime / percentageComplete
-        
-                estTimeRemaining = int(timePerPercent * (100 - percentageComplete))
-                
-                print("Estimated time remaining: " + str(datetime.timedelta(seconds=estTimeRemaining)) + " (HH:MM:SS).")
-            
-            # Updates the most recent percentage of completion for comparison 
-            # use on the next simulation.
-            lastPercentageComplete = percentageComplete
-    
-    # Gets the end time after the simulations have finished running.
+    # Marks the end time and calculates the time taken to run all simulations
     endTime = time.time()
-    
-    # Blank line before the statistics printouts start.    
-    print("")
-    
-    # Only prints out pass/fail statistics if relevant setting is enabled.
+
+    # Prints out pass/fail statistics if the relevant setting is enabled.
     if devSettings.simFailStatsPrinting == True:
-        # Calculates pass/fail rate
-        successRate = (successCounter / (successCounter + failCounter)) * 100
-        
+        # Calculates the pass/fail rate.
+        passCount, failCount = passFailCount(res)
+        successRate = (passCount / (passCount + failCount)) * 100
+
         # Prints failure information if any of the simulations failed.
-        if failCounter > 0:
-            print(str(successCounter) + " successful simulations.")
-            print(str(failCounter) + " failed simulations.")
+        if failCount > 0:
+            print(str(passCount) + " successful simulations.")
+            print(str(failCount) + " failed simulations.")
             print("Approximately " + str(int(successRate)) + "% of simulations passed.")
             print("")
-            
-        # If all sims passed all checks, does not print any of the failure info
-        # to the console - just prints that all sims were successful.
+        
+        # If all simulations passed all checks, just prints that all
+        # simulations were successful.
         else:
             print("All " + str(numberOfSimulations) + " simulations passed.")
         
         # Blank line to separate statistics categories.
         print("")
-    
-    # Only prints out final time statistics if relevant setting is enabled.
+
+    # Only prints out final time statistics if the relevant setting is enabled.
     if devSettings.finalTimeStatsPrinting == True:
         # Time Statistics. Calculates the total time taken to run all simulations,
         # the number of simulations completed each second, and the average time
@@ -183,56 +164,74 @@ def runSimulations(numberOfSimulations):
         simsPerSecond = numberOfSimulations / timeTaken
         avgTimePerSim = timeTaken / numberOfSimulations
         
+        # Prints time statistics.
         print("The total time to run " + str(numberOfSimulations) + " simulations was " + str(datetime.timedelta(seconds=int(timeTaken))) + " (HH:MM:DD)")
         print("An average of around " + str(int(simsPerSecond)) + " simulations were run per second.")
         print("Average time to complete one simulation was " + str(avgTimePerSim) + " seconds.")
 
-def logSequence():
-    file = open("sequenceLog.txt", "a")
-    file.write("\n" + str(int(len(solve.a.sequenceLog)/2)) + " moves were taken to complete this cube.")
-    file.write("\n" + "Solution sequence: " + "\n" + sequenceSpacer(solve.a.sequenceLog) + "\n" + "\n")
-    file.close()
+# Converts the results list into a count of passed vs failed simulations.
+def passFailCount(resultsList):
+    # Initialises the pass and fail counters.
+    passCounter = 0
+    failCounter = 0
+
+    # Cycles through the results, and increments either the pass or fail
+    # counter depending on whether the simulation passed or failed.
+    for i in resultsList:
+        if i == False:
+            failCounter += 1
+        else:
+            passCounter += 1
     
-def logCubeState(simNo):
+    # Returns the pass and fail counters.
+    return passCounter, failCounter
+
+def logSequence(cube):
+    file = open("sequenceLog.txt", "a")
+    file.write("\n" + str(int(len(cube.sequenceLog)/2)) + " moves were taken to complete this cube.")
+    file.write("\n" + "Solution sequence: " + "\n" + sequenceSpacer(cube.sequenceLog) + "\n" + "\n")
+    file.close()
+
+def logCubeState(simNo, cube):
     file = open("sequenceLog.txt", "a")
     file.write("*** SIMULATION NUMBER " + str(simNo) + " ***")
     file.write("\n" + "Cube starting state: ")
     
     file.write("\n" + "Side 1: ")
-    for i in range(solve.a.cubeSize):
+    for i in range(cube.cubeSize):
         file.write("\n")
-        for j in range(solve.a.cubeSize):
-            file.write(solve.a.side1[i][j] + " ")
+        for j in range(cube.cubeSize):
+            file.write(cube.side1[i][j] + " ")
     
     file.write("\n" + "Side 2: ")
-    for i in range(solve.a.cubeSize):
+    for i in range(cube.cubeSize):
         file.write("\n")
-        for j in range(solve.a.cubeSize):
-            file.write(solve.a.side2[i][j] + " ")
+        for j in range(cube.cubeSize):
+            file.write(cube.side2[i][j] + " ")
             
     file.write("\n" + "Side 3: ")
-    for i in range(solve.a.cubeSize):
+    for i in range(cube.cubeSize):
         file.write("\n")
-        for j in range(solve.a.cubeSize):
-            file.write(solve.a.side3[i][j] + " ")
+        for j in range(cube.cubeSize):
+            file.write(cube.side3[i][j] + " ")
             
     file.write("\n" + "Side 4: ")
-    for i in range(solve.a.cubeSize):
+    for i in range(cube.cubeSize):
         file.write("\n")
-        for j in range(solve.a.cubeSize):
-            file.write(solve.a.side4[i][j] + " ")
+        for j in range(cube.cubeSize):
+            file.write(cube.side4[i][j] + " ")
             
     file.write("\n" + "Side 5: ")
-    for i in range(solve.a.cubeSize):
+    for i in range(cube.cubeSize):
         file.write("\n")
-        for j in range(solve.a.cubeSize):
-            file.write(solve.a.side5[i][j] + " ")
+        for j in range(cube.cubeSize):
+            file.write(cube.side5[i][j] + " ")
             
     file.write("\n" + "Side 6: ")
-    for i in range(solve.a.cubeSize):
+    for i in range(cube.cubeSize):
         file.write("\n")
-        for j in range(solve.a.cubeSize):
-            file.write(solve.a.side6[i][j] + " ")
+        for j in range(cube.cubeSize):
+            file.write(cube.side6[i][j] + " ")
             
     file.close()
 
