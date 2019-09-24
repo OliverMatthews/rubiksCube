@@ -118,7 +118,7 @@ def option2():
     if numberOfSimulations <= 10000:
         # Runs the simulations without checking if the number of simulation is
         # less than 10 000.
-        dev.runSimulations(numberOfSimulations)
+        dev.runManySimulations(numberOfSimulations)
     elif numberOfSimulations > 10000:
         # Queries the user if they meant to input such a large number of
         # simulations. User is required to input the same number in again, to
@@ -130,7 +130,7 @@ def option2():
         # simulations.
         if confirmationNumberOfSimulations == numberOfSimulations:
             # If the numbers match, runs the desired number of simulations.
-            dev.runSimulations(numberOfSimulations)
+            dev.runManySimulations(numberOfSimulations)
         else:
             # If the numbers do not match, cancels running the simulations.
             print("Inputs did not match - running simulations cancelled.")
