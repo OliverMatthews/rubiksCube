@@ -21,7 +21,6 @@ class devFunctions:
     def __init__(self):
         self.sequencePrinting = False
         self.simFailStatsPrinting = True
-        self.simTimeStatusPrinting = False # This setting should be removed.
         self.finalTimeStatsPrinting = True
         self.saveSolutions = False
     
@@ -45,16 +44,6 @@ class devFunctions:
         elif boolean == False:
             self.simFailStatsPrinting = False
             print("DEV: Simulation pass/fail statistics printing is now OFF! (this is the default state)")
-    
-    # Toggles whether the estimated time remaining should be printed to the
-    # console when running simulations. Default state for this is ON.
-    def toggleSimTimeStatusPrinting(self, boolean):
-        if boolean == True:
-            self.simTimeStatusPrinting = True
-            print("DEV: Simulation estimated time remaining status printing is now ON! (this is the default state)")
-        elif boolean == False:
-            self.simTimeStatusPrinting = False
-            print("DEV: Simulation estimated time remaining status printing is now OFF!")
     
     # Toggles whether statistics pertaining to overall time taken for
     # simulations to run should be collected and printed to the console.

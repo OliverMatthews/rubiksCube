@@ -165,9 +165,8 @@ def option3():
     print("Please select a developer setting to change from the list below:")
     print("1 - Sequence Printing")
     print("2 - Simulation pass/fail statistics printing")
-    print("3 - Simulation estimated time remaining status printing")
-    print("4 - Simulation final time statistics printing")
-    print("5 - Solution Saving")
+    print("3 - Simulation final time statistics printing")
+    print("4 - Solution Saving")
     userInput = int(input(""))
 
     # Runs whichever selection the user makes.
@@ -176,10 +175,8 @@ def option3():
     elif userInput == 2:
         option3_2()
     elif userInput == 3:
-        option3_3()
-    elif userInput == 4:
         option3_4()
-    elif userInput == 5:
+    elif userInput == 4:
         option3_5()
     # If the user makes an invalid selection, prints that the selection was
     # not recognised.
@@ -264,37 +261,6 @@ def option3_2_1():
 # statistics printing.
 def option3_2_2():
     dev.devSettings.toggleSimFailStatsPrinting(False)
-
-# This function is run if the user opts to change the state of the simulation
-# estimated time remaining status printing setting. A sub-menu is provided to
-# ask the user whether they wish to enable or disable simulation estimated time
-# remaining status printing.
-def option3_3():
-    # Prints a list of options for the user.
-    print("Please choose whether to enable or disable simulation estimated time remaining status printing")
-    print("1 - Enable (turn ON simulation estimated time remaining status printing)")
-    print("2 - Disable (turn OFF simulation estimated time remaining status printing)")
-    userInput = int(input(""))
-
-    # Runs whichever selection the user makes.
-    if userInput == 1:
-        option3_3_1()
-    elif userInput == 2:
-        option3_3_2()
-    # If the user makes an invalid selection, prints that the selection was
-    # not recognised.
-    else:
-        print("That selection was not recognised.")
-
-# This function is run if the user opts to enable simulation estimated time
-# remaining status printing.
-def option3_3_1():
-    dev.devSettings.toggleSimTimeStatusPrinting(True)
-
-# This function is run if the user opts to disable simulation estimated time
-# remaining status printing.
-def option3_3_2():
-    dev.devSettings.toggleSimTimeStatusPrinting(False)
 
 # This function is run if the user opts to change the state of the simulation
 # final time statistics printing setting. A sub-menu is provided to ask the
