@@ -8,6 +8,7 @@ Oli Matthews 2019
 """
 # Imports relevant libraries.
 import solve
+import dev
 
 # This function prints the layout of a side for a user to follow along when
 # inputting their own cube. Takes the colour of the side as input.
@@ -91,14 +92,14 @@ def getSide(colour):
 
 # Runs getSide for each of the 6 colours and assigns the returned matrices to
 # the active cube (solve.a.sideX).
-def getCube():
+def getCube(cube):
     # Runs the getSide function for each of the sides of the cube.
-    solve.a.side1 = getSide("G")
-    solve.a.side2 = getSide("W")
-    solve.a.side3 = getSide("R")
-    solve.a.side4 = getSide("Y")
-    solve.a.side5 = getSide("O")
-    solve.a.side6 = getSide("B")
+    cube.side1 = getSide("G")
+    cube.side2 = getSide("W")
+    cube.side3 = getSide("R")
+    cube.side4 = getSide("Y")
+    cube.side5 = getSide("O")
+    cube.side6 = getSide("B")
 
 # This function prints out the instructions for a user to follow. Should only
 # be used after having set the side matrices in the active cube (solve.a.sideX)
@@ -107,17 +108,20 @@ def instructions():
     # Turns on saving cube solutions. This is required in order to have a log
     # of the sequence that was followed to complete the cube, so that the
     # sequence can later be given to the user.
-    solve.cube.dev.devSettings.toggleSaveSolutions = True
+    dev.devSettings.toggleSaveSolutions = True
+
+    # Initialises a new cube for the user.
+    userCube = solve.cube.rubikCube(3)
 
     # Resets the sequence log to be blank.
-    solve.a.sequenceLog = ""
+    userCube.sequenceLog = ""
 
     # Solves the whole cube.
-    solve.totalSolve()
+    solve.totalSolve(userCube)
 
     # Prints the instructions for the user to follow.
-    instructionsForUser = solve.cube.dev.sequenceSpacer(solve.a.sequenceLog)
-    print("There are " + str(int(len(solve.a.sequenceLog)/2)) + " moves needed to complete this cube.")
+    instructionsForUser = dev.sequenceSpacer(userCube.sequenceLog)
+    print("There are " + str(int(len(userCube.sequenceLog)/2)) + " moves needed to complete this cube.")
     print(instructionsForUser)
 
 # This function checks the user input to make sure only cube colours have been
