@@ -792,7 +792,6 @@ def totalSolve(cube):
     solveGreenCross(cube)
     solveGreenCorners(cube)
     fixAlignedCenters(cube)
-    fixAlignedCorners(cube) # Should this step be repeated???????
     solveFirstTwoRows(cube)
     solveBlueCross(cube)
     solveBlueSide(cube)
