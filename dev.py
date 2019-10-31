@@ -74,11 +74,12 @@ def runSimulation(simNumber):
     # Initialises a new cube.
     gameCube = solve.cube.rubikCube(3)
 
-    # Randomly shuffles the cube 30 times - enough to ensure a random shuffle.
+    # Randomly shuffles the cube 30 times - enough to ensure a random shuffle,
+    # then saves the layout of the cube (if sequence logging is enabled in the)
+    # developer settings.
     gameCube.randomShuffle(30)
     if devSettings.saveSolutions == True:
-        gameCube.sequenceLog = ""
-        logCubeState((simNumber + 1), gameCube)
+        gameCube.saveCurrentLayout()
 
     # Runs the solving procedure on the cube.
     solve.totalSolve(gameCube)
@@ -86,7 +87,7 @@ def runSimulation(simNumber):
     # Saves the complete sequence of moves used to solve the cube, if sequence
     # logging is enabled in the developer settings.
     if devSettings.saveSolutions == True:
-        logSequence(gameCube)
+        logSolution((simNumber + 1), gameCube)
 
     # Checks that the cube has been completed correctly. Returns false if the
     # cube was not solved, and returns true if the cube was solved.
@@ -175,53 +176,61 @@ def passFailCount(resultsList):
     # Returns the pass and fail counters.
     return passCounter, failCounter
 
-def logSequence(cube):
-    file = open("sequenceLog.txt", "a")
-    file.write("\n" + str(int(len(cube.sequenceLog)/2)) + " moves were taken to complete this cube.")
-    file.write("\n" + "Solution sequence: " + "\n" + sequenceSpacer(cube.sequenceLog) + "\n" + "\n")
-    file.close()
+def logSolution(simNo, cube):
+    # Unpacks the saved layout of the cube into 6 separate side matrices.
+    side1 = cube.layout[0]
+    side2 = cube.layout[1]
+    side3 = cube.layout[2]
+    side4 = cube.layout[3]
+    side5 = cube.layout[4]
+    side6 = cube.layout[5]
+    completeSequence = sequenceSpacer(cube.sequenceLog)
 
-def logCubeState(simNo, cube):
+    textToWrite = ""
+
+    textToWrite = textToWrite + "*** SIMULATION NUMBER " + str(simNo) + " ***" + "\n" + "Cube starting state: "
+    
+    textToWrite = textToWrite + "\n" + "Side 1: "
+    for i in range(cube.cubeSize):
+        textToWrite = textToWrite + "\n"
+        for j in range(cube.cubeSize):
+            textToWrite = textToWrite + side1[i][j] + " "
+    
+    textToWrite = textToWrite + "\n" + "Side 2: "
+    for i in range(cube.cubeSize):
+        textToWrite = textToWrite + "\n"
+        for j in range(cube.cubeSize):
+            textToWrite = textToWrite + side2[i][j] + " "
+            
+    textToWrite = textToWrite + "\n" + "Side 3: "
+    for i in range(cube.cubeSize):
+        textToWrite = textToWrite + "\n"
+        for j in range(cube.cubeSize):
+            textToWrite = textToWrite + side3[i][j] + " "
+            
+    textToWrite = textToWrite + "\n" + "Side 4: "
+    for i in range(cube.cubeSize):
+        textToWrite = textToWrite + "\n"
+        for j in range(cube.cubeSize):
+            textToWrite = textToWrite + side4[i][j] + " "
+            
+    textToWrite = textToWrite + "\n" + "Side 5: "
+    for i in range(cube.cubeSize):
+        textToWrite = textToWrite + "\n"
+        for j in range(cube.cubeSize):
+            textToWrite = textToWrite + side5[i][j] + " "
+            
+    textToWrite = textToWrite + "\n" + "Side 6: "
+    for i in range(cube.cubeSize):
+        textToWrite = textToWrite + "\n"
+        for j in range(cube.cubeSize):
+            textToWrite = textToWrite + side6[i][j] + " "
+
+    textToWrite = textToWrite + "\n" + str(int(len(cube.sequenceLog)/2)) + " moves were taken to complete this cube."
+    textToWrite = textToWrite + "\n" + "Solution sequence: " + "\n" + completeSequence + "\n" + "\n"
+
     file = open("sequenceLog.txt", "a")
-    file.write("*** SIMULATION NUMBER " + str(simNo) + " ***")
-    file.write("\n" + "Cube starting state: ")
-    
-    file.write("\n" + "Side 1: ")
-    for i in range(cube.cubeSize):
-        file.write("\n")
-        for j in range(cube.cubeSize):
-            file.write(cube.side1[i][j] + " ")
-    
-    file.write("\n" + "Side 2: ")
-    for i in range(cube.cubeSize):
-        file.write("\n")
-        for j in range(cube.cubeSize):
-            file.write(cube.side2[i][j] + " ")
-            
-    file.write("\n" + "Side 3: ")
-    for i in range(cube.cubeSize):
-        file.write("\n")
-        for j in range(cube.cubeSize):
-            file.write(cube.side3[i][j] + " ")
-            
-    file.write("\n" + "Side 4: ")
-    for i in range(cube.cubeSize):
-        file.write("\n")
-        for j in range(cube.cubeSize):
-            file.write(cube.side4[i][j] + " ")
-            
-    file.write("\n" + "Side 5: ")
-    for i in range(cube.cubeSize):
-        file.write("\n")
-        for j in range(cube.cubeSize):
-            file.write(cube.side5[i][j] + " ")
-            
-    file.write("\n" + "Side 6: ")
-    for i in range(cube.cubeSize):
-        file.write("\n")
-        for j in range(cube.cubeSize):
-            file.write(cube.side6[i][j] + " ")
-            
+    file.write(textToWrite)
     file.close()
 
 # This function puts a comma and a space between each move in a given sequence.
