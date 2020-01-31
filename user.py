@@ -108,6 +108,7 @@ def instructions(cube):
     # Turns on saving cube solutions. This is required in order to have a log
     # of the sequence that was followed to complete the cube, so that the
     # sequence can later be given to the user.
+    preserveSetting = dev.devSettings.saveSolutions
     dev.devSettings.toggleSaveSolutions = True
 
     # Resets the sequence log to be blank.
@@ -120,6 +121,10 @@ def instructions(cube):
     instructionsForUser = dev.sequenceSpacer(cube.sequenceLog)
     print("There are " + str(int(len(cube.sequenceLog)/2)) + " moves needed to complete this cube.")
     print(instructionsForUser)
+
+    # Changes the solution saving setting to whatever it was before the
+    # function was called.
+    dev.devSettings.saveSolutions = preserveSetting
 
 # This function checks the user input to make sure only cube colours have been
 # entered. Takes a string as input, and returns a string.
