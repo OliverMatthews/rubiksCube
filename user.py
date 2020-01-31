@@ -104,24 +104,21 @@ def getCube(cube):
 # This function prints out the instructions for a user to follow. Should only
 # be used after having set the side matrices in the active cube (solve.a.sideX)
 # to the desired values.
-def instructions():
+def instructions(cube):
     # Turns on saving cube solutions. This is required in order to have a log
     # of the sequence that was followed to complete the cube, so that the
     # sequence can later be given to the user.
     dev.devSettings.toggleSaveSolutions = True
 
-    # Initialises a new cube for the user.
-    userCube = solve.cube.rubikCube(3)
-
     # Resets the sequence log to be blank.
-    userCube.sequenceLog = ""
+    cube.sequenceLog = ""
 
     # Solves the whole cube.
-    solve.totalSolve(userCube)
+    solve.totalSolve(cube)
 
     # Prints the instructions for the user to follow.
-    instructionsForUser = dev.sequenceSpacer(userCube.sequenceLog)
-    print("There are " + str(int(len(userCube.sequenceLog)/2)) + " moves needed to complete this cube.")
+    instructionsForUser = dev.sequenceSpacer(cube.sequenceLog)
+    print("There are " + str(int(len(cube.sequenceLog)/2)) + " moves needed to complete this cube.")
     print(instructionsForUser)
 
 # This function checks the user input to make sure only cube colours have been

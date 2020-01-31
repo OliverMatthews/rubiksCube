@@ -74,11 +74,14 @@ def mainMenu():
 # Asks the user for the state of their cube, then solves it, and prints out
 # a list of instructions for the user to follow.
 def option1():
+    # Initialises a new instance of the rubiks cube class, size 3.
+    gamecube = user.solve.cube.rubikCube(3)
+
     # Gets the state of the cube from the user.
-    user.getCube()
+    user.getCube(gamecube)
 
     # Prints out instructions for the user to follow.
-    user.instructions()
+    user.instructions(gamecube)
 
     # Loop to ask the user if they would like to solve another cube or return
     # to the main menu.
