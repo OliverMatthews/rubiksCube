@@ -121,7 +121,7 @@ def runManySimulations(numberOfSimulations):
 
     # Gets the number of real (not logical) CPU cores. If "None" is returned,
     # assumes a single core to be safe.
-    if psutil.cpu_count(logical=False) == "None":
+    if type(psutil.cpu_count(logical=False)) == 'NoneType':
         cores = 1
     else:
         cores = int(psutil.cpu_count(logical=False))
