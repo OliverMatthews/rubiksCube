@@ -141,7 +141,7 @@ def runManySimulations(numberOfSimulations):
                 res.append((runSimulation(i)))
                 progressBar.update()
     else:
-        with multiprocessing.pool(processes=cores) as pool:
+        with multiprocessing.Pool(processes=cores) as pool:
             with tqdm(total=numberOfSimulations) as progressBar:
                 for i, result in tqdm(enumerate(pool.imap(runSimulation, range(numberOfSimulations)))):
                     progressBar.update()
