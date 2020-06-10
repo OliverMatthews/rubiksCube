@@ -48,7 +48,7 @@ def mainMenu():
     
     # If user opts to change settings.
     elif userInput == 3:
-        # Repeats the menu option repeatedlt until the user selects to return
+        # Repeats the menu option repeated until the user selects to return
         # to the main menu.
         menuBool = True
         while menuBool == True:

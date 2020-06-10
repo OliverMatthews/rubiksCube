@@ -8,11 +8,10 @@ Oli Matthews 2019
 """
 # Imports relevant libraries
 import solve
-import dev
-from multiprocessing import Pool
-import psutil
+import multiprocessing
 import time
 import datetime
+import platform
 from tqdm import tqdm
 
 # Class contains developer mode settings which can be toggled on or off
@@ -114,13 +113,17 @@ def runSimulation(simNumber):
 # Function to run many simulations. Each simulation randomly shuffles the cube,
 # solves it, and checks the end state of the cube is correctly solved. After
 # running all simulations, prints information indicating various statistics
-# such as pass/fail count and time taken.
+# such as pass/fail count and time taken. Does not work on Windows.
 def runManySimulations(numberOfSimulations):
     # Marks the starting time.
     startTime = time.time()
 
-    # Gets the number of real (not logical) CPU cores.
-    cores = int(psutil.cpu_count(logical=False))
+    # Gets the number of real (not logical) processing cores. If a None object
+    # is returned instead of an integer, sets the core count to 2 instead.
+    if multiprocessing.cpu_count() is None:
+        cores = 2
+    else:
+        cores = int(multiprocessing.cpu_count())
 
     # Initialises the results list.
     res = []
@@ -129,12 +132,20 @@ def runManySimulations(numberOfSimulations):
     # as a pool, then uses the pool to complete all simulations. Keeps track
     # of how many passes and fails there were in the 'res' list. A progress
     # bar is shown whilst running simulations, as a large number of simulations
-    # can take some time to complete.
-    with Pool(processes=cores) as pool:
+    # can take some time to complete. Multi-core processing is disabled on
+    # machines running Windows.
+    if platform.system() == "Windows":
+        print("Please be aware multi-core processing is currently unavailable on Windows.")
         with tqdm(total=numberOfSimulations) as progressBar:
-            for i, result in tqdm(enumerate(pool.imap(runSimulation, range(numberOfSimulations)))):
+            for i in tqdm(range(numberOfSimulations)):
+                res.append((runSimulation(i)))
                 progressBar.update()
-                res.append(result)
+    else:
+        with multiprocessing.Pool(processes=cores) as pool:
+            with tqdm(total=numberOfSimulations) as progressBar:
+                for i, result in tqdm(enumerate(pool.imap(runSimulation, range(numberOfSimulations)))):
+                    progressBar.update()
+                    res.append(result)
     
     # Marks the end time and calculates the time taken to run all simulations
     endTime = time.time()
