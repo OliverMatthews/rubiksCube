@@ -8,8 +8,7 @@ Oli Matthews 2019
 """
 # Imports relevant libraries
 import solve
-from multiprocessing import Pool
-import psutil
+import multiprocessing
 import time
 import datetime
 import platform
@@ -119,12 +118,12 @@ def runManySimulations(numberOfSimulations):
     # Marks the starting time.
     startTime = time.time()
 
-    # Gets the number of real (not logical) CPU cores. If "None" is returned,
-    # assumes a single core to be safe.
-    if type(psutil.cpu_count(logical=False)) == 'NoneType':
-        cores = 1
+    # Gets the number of real (not logical) processing cores. If a None object
+    # is returned instead of an integer, sets the core count to 2 instead.
+    if multiprocessing.cpu_count() is None:
+        cores = 2
     else:
-        cores = int(psutil.cpu_count(logical=False))
+        cores = int(multiprocessing.cpu_count())
 
     # Initialises the results list.
     res = []
@@ -142,7 +141,7 @@ def runManySimulations(numberOfSimulations):
                 res.append((runSimulation(i)))
                 progressBar.update()
     else:
-        with Pool(processes=cores) as pool:
+        with multiprocessing.pool(processes=cores) as pool:
             with tqdm(total=numberOfSimulations) as progressBar:
                 for i, result in tqdm(enumerate(pool.imap(runSimulation, range(numberOfSimulations)))):
                     progressBar.update()
