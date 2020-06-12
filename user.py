@@ -1,13 +1,14 @@
 """
 Rubix Cube Solver - User Cube Input(s)
 
-v0.10 (alpha)
+v0.11 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
 """
 # Imports relevant libraries.
 import solve
+import dev
 
 # This function prints the layout of a side for a user to follow along when
 # inputting their own cube. Takes the colour of the side as input.
@@ -91,56 +92,39 @@ def getSide(colour):
 
 # Runs getSide for each of the 6 colours and assigns the returned matrices to
 # the active cube (solve.a.sideX).
-def getCube():
+def getCube(cube):
     # Runs the getSide function for each of the sides of the cube.
-    solve.a.side1 = getSide("G")
-    solve.a.side2 = getSide("W")
-    solve.a.side3 = getSide("R")
-    solve.a.side4 = getSide("Y")
-    solve.a.side5 = getSide("O")
-    solve.a.side6 = getSide("B")
-
-# This function puts a comma and a space between each move in a given sequence.
-def sequenceSpacer(sequence):
-    # Sets the output sequence to be empty.
-    spacedSequence = ""
-    
-    # Repeatedly gets the next move from the sequence and inserts a comma and a
-    # space.
-    for i in range(int(len(sequence)/2)):
-        
-        # Checks if there are still more moves in the sequence. If there are,
-        # the move is formatted with a comma and a space after it. If it is the
-        # last move in the sequence, the move is formatted with just a period.
-        if int(len(sequence)) > 2:
-            spacedSequence = spacedSequence + str(sequence[0:2]) + ", "
-            sequence = sequence[2:]
-        else: 
-            spacedSequence = spacedSequence + str(sequence[0:2]) + "."
-            sequence = ""
-
-    # Returns the sequence with commas and spaces.
-    return spacedSequence
+    cube.side1 = getSide("G")
+    cube.side2 = getSide("W")
+    cube.side3 = getSide("R")
+    cube.side4 = getSide("Y")
+    cube.side5 = getSide("O")
+    cube.side6 = getSide("B")
 
 # This function prints out the instructions for a user to follow. Should only
 # be used after having set the side matrices in the active cube (solve.a.sideX)
 # to the desired values.
-def instructions():
+def instructions(cube):
     # Turns on saving cube solutions. This is required in order to have a log
     # of the sequence that was followed to complete the cube, so that the
     # sequence can later be given to the user.
-    solve.cube.dev.devSettings.toggleSaveSolutions = True
+    preserveSetting = dev.devSettings.saveSolutions
+    dev.devSettings.toggleSaveSolutions = True
 
     # Resets the sequence log to be blank.
-    solve.a.sequenceLog = ""
+    cube.sequenceLog = ""
 
     # Solves the whole cube.
-    solve.totalSolve()
+    solve.totalSolve(cube)
 
     # Prints the instructions for the user to follow.
-    instructionsForUser = sequenceSpacer(solve.a.sequenceLog)
-    print("There are " + str(int(len(solve.a.sequenceLog)/2)) + " moves needed to complete this cube.")
+    instructionsForUser = dev.sequenceSpacer(cube.sequenceLog)
+    print("There are " + str(int(len(cube.sequenceLog)/2)) + " moves needed to complete this cube.")
     print(instructionsForUser)
+
+    # Changes the solution saving setting to whatever it was before the
+    # function was called.
+    dev.devSettings.saveSolutions = preserveSetting
 
 # This function checks the user input to make sure only cube colours have been
 # entered. Takes a string as input, and returns a string.

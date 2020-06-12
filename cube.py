@@ -1,7 +1,7 @@
 """
 Rubix Cube Solver - Cube Object(s)
 
-v0.10 (alpha)
+v0.11 (alpha)
 History available at github.com/OliverMatthews/rubiksCube/
 
 Oli Matthews 2019
@@ -10,6 +10,7 @@ Oli Matthews 2019
 from random import randint
 import rotations as rt
 import dev
+import copy
 
 # Contains functions for the Rubik's cube object.
 class rubikCube:
@@ -27,6 +28,7 @@ class rubikCube:
         # Initialises other parameters for the cube.
         self.cubeSize = cubeSize 
         self.sequenceLog = ""
+        self.layout = []
         
         # Fills the cube sides with the correct default colours.
         for i in range(cubeSize):
@@ -44,6 +46,14 @@ class rubikCube:
                 self.side4[i].append("Y")
                 self.side5[i].append("O")
                 self.side6[i].append("B")
+
+    def saveCurrentLayout(self):
+        self.layout.append(copy.deepcopy(self.side1))
+        self.layout.append(copy.deepcopy(self.side2))
+        self.layout.append(copy.deepcopy(self.side3))
+        self.layout.append(copy.deepcopy(self.side4))
+        self.layout.append(copy.deepcopy(self.side5))
+        self.layout.append(copy.deepcopy(self.side6))
     
     # Displays the current state of the cube to the console. Very useful for
     # debugging!
